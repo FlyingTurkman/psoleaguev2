@@ -1,7 +1,6 @@
 import { userType } from "@/types";
 import { Users } from "@/utils/mongodb/models";
 import { NextResponse, type NextRequest } from "next/server";
-import { uuid } from "uuidv4";
 const md5 = require('md5')
 import { ObjectId } from 'mongodb'
 import { tokenGenerator } from "@/utils/src/tokenGenerator";
@@ -48,17 +47,20 @@ export async function POST(req: NextRequest) {
         const token = tokenGenerator(username)
         const newUser: userType | null | undefined = await Users.create({
             _id: new ObjectId(),
+            email,
             username,
             password: md5(password),
             token,
             country,
             mainPosition,
-            sidePosition
+            sidePosition,
+            dateTime: new Date()
         })
         if (newUser) {
             const cookieStore = cookies()
             cookieStore.set('token', token, { expires: Date.now() + tokenExpires })
-            return NextResponse.redirect(`${process.env.appPath}`)
+            return NextResponse.json('User succesfully created', { status: 200 })
+
         } else {
             return NextResponse.json('An error has occured', { status: 400 })
         }

@@ -10,6 +10,10 @@ export const userSchema = new Schema<userType>({
         type: Schema.Types.ObjectId,
         required: true
     },
+    email: {
+        type: String,
+        required: true
+    },
     username: {
         type: String,
         required: true

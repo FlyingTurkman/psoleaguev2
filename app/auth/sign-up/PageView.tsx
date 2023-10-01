@@ -7,10 +7,11 @@ import { useEffect, useState, useRef } from "react"
 import Button from "@/components/Button"
 import { toast } from "react-toastify"
 import { usernameRegex } from "@/utils/src/constants"
-
+import { useRouter } from "next/navigation"
 
 
 export default function PageView() {
+    const router = useRouter()
     const usernameRef = useRef<HTMLInputElement>(null)
     const formik = useFormik({
         initialValues: {
@@ -22,7 +23,7 @@ export default function PageView() {
             sidePosition: -1
         },
         onSubmit: ({ email, username,password, country, mainPosition, sidePosition }) => {
-            toast.promise( () => signUp({ email, username,password, country, mainPosition, sidePosition }), {pending: 'User creating please wait.'})
+            toast.promise(signUp({ email, username,password, country, mainPosition, sidePosition }), {pending: 'User creating please wait.'})
         },
         validationSchema: Yup.object({
             email: Yup.string().email().required('Please type your email'),
@@ -48,7 +49,6 @@ export default function PageView() {
             })
             if (usernameRef.current) {
                 usernameRef.current.value = validUsername.toString().replaceAll(',', '')
-                console.log('changed')
             }
         }
     }, [formik.values.username])
@@ -128,23 +128,31 @@ export default function PageView() {
         </form>
     )
 
-    async function signUp({ email, username,password, country, mainPosition, sidePosition }: { email: string, username: string, password: string, country: string, mainPosition: number, sidePosition: number }) {
+    async function signUp({ email, username, password, country, mainPosition, sidePosition }: { email: string, username: string, password: string, country: string, mainPosition: number, sidePosition: number }) {
         setLoading(true)
         try {
             const resSignUp = await fetch(`${process.env.appPath}/api/userApi/signUpApi`, {
                 method: 'POST',
                 body: JSON.stringify({
                     apiSecret: process.env.apiSecret,
-                    
+                    email,
+                    username,
+                    password,
+                    country,
+                    mainPosition,
+                    sidePosition
                 })
             })
-
             const res = await resSignUp.json()
-            if (resSignUp.status != 200) {
+            if (resSignUp.status == 200) {
+                toast.success(res)
+                router.push('/')
+            } else {
                 toast.error(res)
             }
         } catch (error) {
             console.log(error)
+            toast.error('An error has occured')
         }
         setLoading(false)
     }

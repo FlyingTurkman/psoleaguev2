@@ -5,5 +5,7 @@ import { createContext } from "react";
 
 export const PlayerPageContext  = createContext<playerPageContextType>({
     players: [],
-    setPlayers: () => {}
+    setPlayers: () => {},
+    teams: [],
+    setTeams: () => {}
 })

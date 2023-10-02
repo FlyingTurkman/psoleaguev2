@@ -1,4 +1,4 @@
-import { userType } from "@/types";
+import { teamType, userType } from "@/types";
 import { Schema } from "mongoose";
 
 
@@ -45,6 +45,30 @@ export const userSchema = new Schema<userType>({
     teamId: {
         type: String,
         required: false
+    },
+    dateTime: {
+        type: Date,
+        required: true
+    }
+})
+
+
+export const teamSchema = new Schema<teamType>({
+    _id: {
+        type: Schema.Types.ObjectId,
+        required: true
+    },
+    teamName: {
+        type: String,
+        required: true
+    },
+    avatar: {
+        type: String,
+        required: false
+    },
+    country: {
+        type: String,
+        required: true
     },
     dateTime: {
         type: Date,

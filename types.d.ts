@@ -21,10 +21,20 @@ export type userType = {
 }
 
 
+export type teamType = {
+    _id: ObjectId,
+    teamName: string,
+    country: string,
+    avatar?: string,
+    dateTime: Date
+}
+
 
 export type playerPageContextType = {
     players: userType[],
-    setPlayers: Dispatch<userType[]>
+    setPlayers: Dispatch<userType[]>,
+    teams: teamType[],
+    setTeams: Dispatch<teamType[]>
 }
 
 

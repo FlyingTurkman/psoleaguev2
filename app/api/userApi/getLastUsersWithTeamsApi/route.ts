@@ -1,5 +1,5 @@
-import { userType } from "@/types";
-import { Users } from "@/utils/mongodb/models";
+import { teamType, userType } from "@/types";
+import { Teams, Users } from "@/utils/mongodb/models";
 import { ObjectId } from "mongodb";
 import { NextResponse, type NextRequest } from "next/server";
 
@@ -21,12 +21,24 @@ export async function POST(req: NextRequest) {
     }
 
     try {
-        const users: userType[] = await Users.find({}, {
+        const players: userType[] = await Users.find({}, {
             password: 0,
             token: 0,
             email: 0
         }).sort({ dateTime: -1 }).limit(page * 20)
-        return NextResponse.json(users, { status: 200 })
+
+        const teamIds: ObjectId[] | null = players.filter((p) => p.teamId).map((user) => {
+            return new ObjectId(user.teamId || '')
+
+        })
+
+
+        const teams: teamType[] = await Teams.find({
+            _id: { $in: teamIds }
+        })
+
+        
+        return NextResponse.json({ players, teams }, { status: 200 })
     } catch (error) {
         console.log(error)
     }

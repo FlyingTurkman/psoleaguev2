@@ -37,6 +37,11 @@ export type playerPageContextType = {
     setTeams: Dispatch<teamType[]>
 }
 
+export type teamPageContextType = {
+    teams: teamType[],
+    setTeams: Dispatch<teamType[]>
+}
+
 
 declare global {
     namespace NodeJS {

@@ -30,7 +30,7 @@ export default function PageView({ initialPlayers, initialTeams }: { initialPlay
                         {players.map((player, index) => {
                             const team: teamType | null | undefined = teams.find((t) => t._id.toString() == player.teamId)
                             return(
-                                <PlayerCard key={`playerList${index}-${player._id.toString()}`}/>
+                                <PlayerCard key={`playerList${index}-${player._id.toString()}`} player={player} team={team}/>
                             )
                         })}
                     </div>

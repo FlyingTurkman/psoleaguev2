@@ -53,7 +53,7 @@ export default function PageView() {
         }
     }, [formik.values.username])
     return(
-        <form className="flex flex-col gap-2 p-2 bg-slate-100 rounded" onSubmit={formik.handleSubmit}>
+        <form className="flex flex-col gap-2 p-2 bg-slate-200 rounded" onSubmit={formik.handleSubmit}>
             <h1 className="text-center">Sign Up</h1>
             <div className="flex flex-col">
                 <label className="formLabel" htmlFor="email">Email</label>

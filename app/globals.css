@@ -4,6 +4,11 @@
 
 
 
+
+* {
+  @apply outline-none focus:outline-none
+}
+
 h1 {
   @apply text-xl font-bold
 }
@@ -30,4 +35,12 @@ h3 {
 
 .buttonPrimary {
   @apply bg-blue-600 hover:bg-blue-800 text-white p-2 rounded disabled:bg-gray-600 disabled:hover:bg-gray-800 transition-all
+}
+
+.scrollBar {
+  @apply scrollbar-thin scrollbar-thumb-blue-800
+}
+
+.menuLink {
+  @apply flex flex-row font-semibold items-center gap-2 p-2 hover:bg-blue-800 transition-all rounded-full
 }

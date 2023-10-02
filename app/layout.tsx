@@ -1,6 +1,8 @@
+import MainMenu from '@/components/MainMenu';
 import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import { cookies } from 'next/headers';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -16,9 +18,12 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  const cookieStore = cookies()
+  const token = cookieStore.get('token')?.value
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={`${inter.className} flex flex-row bg-gray-100 scrollBar`}>
+        <MainMenu/>
         {children}
         <ToastContainer
           position="bottom-left"

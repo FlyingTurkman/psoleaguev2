@@ -1,4 +1,6 @@
 import { ObjectId } from "mongodb"
+import { Dispatch } from 'react'
+
 
 export {}
 
@@ -18,6 +20,12 @@ export type userType = {
     dateTime: Date
 }
 
+
+
+export type playerPageContextType = {
+    players: userType[],
+    setPlayers: Dispatch<userType[]>
+}
 
 
 declare global {

@@ -1,5 +1,6 @@
 import { teamType } from "@/types"
 import PageView from "./PageView"
+import { Teams } from "@/utils/mongodb/models"
 
 
 
@@ -40,3 +41,4 @@ export async function getTeams(): Promise<teamType[]> {
         return []
     }
 }
+

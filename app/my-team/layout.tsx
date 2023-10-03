@@ -1,8 +1,9 @@
 import MyTeamContextProvider from "@/components/myTeam/MyTeamContextProvider";
 import { teamType } from "@/types";
 import { cookies } from "next/headers";
+import Link from "next/link";
 import React from "react";
-
+import { IoPeople, IoShirt } from "react-icons/io5";
 
 
 
@@ -20,11 +21,31 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     if (token) {
         team = await getMyTeam(token)
     }
-    return(
-        <MyTeamContextProvider initialTeam={null}>
-            {children}
-        </MyTeamContextProvider>
-    )
+    if (team) {
+        return(
+            <MyTeamContextProvider initialTeam={team}>
+                {children}
+            </MyTeamContextProvider>
+        )
+    } else {
+        return(
+            <MyTeamContextProvider initialTeam={team}>
+                <div className="w-full flex flex-col h-screen items-center justify-center text-xl font-semibold">
+                    <div className="flex flex-row">
+                        <Link href={'/my-team/create'} className="flex flex-row gap-2 p-2 rounded-l bg-blue-600 text-white items-center">
+                            <IoShirt/>
+                            <label className="cursor-pointer">Create a team</label>
+                        </Link>
+                        <Link href={'/teams'} className="flex flex-row gap-2 p-2 rounded-r bg-white text-blue-600 items-center">
+                            <label className="cursor-pointer">Join a team</label>
+                            <IoPeople/>
+                        </Link>
+                    </div>
+                </div>
+            </MyTeamContextProvider>
+        )
+    }
+
 }
 
 async function getMyTeam(token: string): Promise<teamType | null | undefined> {

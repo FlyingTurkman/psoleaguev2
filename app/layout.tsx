@@ -6,7 +6,7 @@ import { cookies } from 'next/headers';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SiteContextProvider from '@/components/SiteContextProvider';
-import { userType } from '@/types';
+import { teamType, userType } from '@/types';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -23,13 +23,20 @@ export default async function RootLayout({
   const cookieStore = cookies()
   const token = cookieStore.get('token')?.value
   let user: userType | null | undefined = null
+  let team: teamType | null | undefined = null
   if (token) {
     user = await getUser(token)
+    if (user?.teamId) {
+      team = await getTeam(user.teamId)
+    }
   }
   return (
     <html lang="en">
       <body className={`${inter.className} flex flex-row bg-gray-100 scrollBar`}>
-        <SiteContextProvider user={user}>
+        <SiteContextProvider 
+        user={user}
+        team={team}
+        >
           <MainMenu/>
           {children}
           <ToastContainer
@@ -65,6 +72,28 @@ async function getUser(token: string): Promise<userType | null | undefined> {
     const res = await resUser.json()
 
     if (resUser.status == 200) {
+      return res
+    } else {
+      return undefined
+    }
+  } catch (error) {
+    console.log(error)
+    return undefined
+  }
+}
+
+async function getTeam(teamId: string): Promise<teamType | null | undefined> {
+  try {
+    const resTeam = await fetch(`${process.env.appPath}/api/teamApi/getCurrentTeamApi`, {
+      method: 'POST',
+      body: JSON.stringify({
+        apiSecret: process.env.apiSecret,
+        teamId
+      })
+    })
+    const res = await resTeam.json()
+
+    if (resTeam.status == 200) {
       return res
     } else {
       return undefined

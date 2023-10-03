@@ -8,7 +8,6 @@ import PageView from "./PageView"
 
 
 
-
 export default async function Page() {
     const teams: teamType[] = await getTeams()
     return(

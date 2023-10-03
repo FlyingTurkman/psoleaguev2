@@ -34,7 +34,8 @@ export type teamType = {
 }
 
 export type siteContextType = {
-    user?: userType | null | undefined
+    user?: userType | null | undefined,
+    team?: teamType | null | undefined
 }
 
 
@@ -48,6 +49,11 @@ export type playerPageContextType = {
 export type teamPageContextType = {
     teams: teamType[],
     setTeams: Dispatch<teamType[]>
+}
+
+export type myTeamPageContextType = {
+    team: teamType | null | undefined,
+    setTeam: Dispatch<teamType | null | undefined>
 }
 
 

@@ -1,7 +1,7 @@
 'use client'
 import React from "react"
 import { SiteContext } from "@/context/SiteContext"
-import { siteContextType, userType } from "@/types"
+import { siteContextType, teamType, userType } from "@/types"
 
 
 
@@ -9,9 +9,10 @@ import { siteContextType, userType } from "@/types"
 
 
 
-export default function SiteContextProvider({ children, user }: { children: React.ReactNode, user: userType | null | undefined }) {
+export default function SiteContextProvider({ children, user, team }: { children: React.ReactNode, user: userType | null | undefined, team: teamType | null | undefined }) {
     const siteData: siteContextType = {
-        user
+        user,
+        team
     }
     return(
         <SiteContext.Provider value={siteData}>

@@ -24,9 +24,17 @@ export type userType = {
 export type teamType = {
     _id: ObjectId,
     teamName: string,
+    teamTag: string,
+    owner: string,
+    captain: string,
+    coCaptain?: string,
     country: string,
     avatar?: string,
     dateTime: Date
+}
+
+export type siteContextType = {
+    user?: userType | null | undefined
 }
 
 

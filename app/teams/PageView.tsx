@@ -2,6 +2,8 @@
 import { teamPageContextType, teamType } from "@/types";
 import { TeamPageContext } from "@/context/teamPageContext";
 import { useState } from "react";
+import SearchBar from "@/components/teams/SearchBar";
+import { WVList } from "virtua";
 
 
 
@@ -14,8 +16,19 @@ export default function PageView({ initialTeams }: { initialTeams: teamType[] })
     }
     return(
         <TeamPageContext.Provider value={pageData}>
-            <div>
-                
+            <div className="flex flex-col w-full items-center">
+                <SearchBar/>
+                <WVList>
+                    <div className="flex flex-col mx-auto items-center gap-2">
+                        {teams.map((team) => {
+                            return(
+                                <div key={`${team._id.toString()}`}>
+
+                                </div>
+                            )
+                        })}
+                    </div>
+                </WVList>
             </div>
         </TeamPageContext.Provider>
     )

@@ -62,6 +62,22 @@ export const teamSchema = new Schema<teamType>({
         type: String,
         required: true
     },
+    teamTag: {
+        type: String,
+        required: true
+    },
+    owner: {
+        type: String,
+        required: true
+    },
+    captain: {
+        type: String,
+        required: true
+    },
+    coCaptain: {
+        type: String,
+        required: false
+    },
     avatar: {
         type: String,
         required: false

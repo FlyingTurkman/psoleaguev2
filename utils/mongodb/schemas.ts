@@ -1,4 +1,4 @@
-import { teamType, userType } from "@/types";
+import { teamType, userType, wallType } from "@/types";
 import { Schema } from "mongoose";
 
 
@@ -90,6 +90,32 @@ export const teamSchema = new Schema<teamType>({
     avatar: {
         type: String,
         required: false
+    },
+    dateTime: {
+        type: Date,
+        required: true
+    }
+})
+
+
+export const wallSchema = new Schema<wallType>({
+    _id: {
+        type: Schema.Types.ObjectId,
+        required: true
+    },
+    from: {
+        type: String,
+        required: true
+    },
+    to: {
+        type: String,
+        required: true
+    },
+    content: {
+        type: String,
+        required: true,
+        minlength: 10,
+        maxlength: 200
     },
     dateTime: {
         type: Date,

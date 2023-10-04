@@ -45,6 +45,15 @@ h3 {
   @apply flex flex-row font-semibold items-center gap-2 p-2 hover:bg-blue-800 transition-all rounded-full
 }
 
+.subMenuLink, .subMenuLinkActive {
+  @apply flex text-2xl flex-1 hover:bg-blue-800 items-center justify-center p-2 rounded transition-all
+}
+
+.subMenuLinkActive {
+  @apply bg-white text-blue-600
+}
+
 .link {
   @apply hover:underline
 }
+

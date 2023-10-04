@@ -9,6 +9,7 @@ import SiteContextProvider from '@/components/SiteContextProvider';
 import { teamType, userType } from '@/types';
 import { Teams } from '@/utils/mongodb/models';
 import { ObjectId } from 'mongodb';
+import LastNews from '@/components/LastNews';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -34,13 +35,14 @@ export default async function RootLayout({
   }
   return (
     <html lang="en">
-      <body className={`${inter.className} flex flex-row bg-gray-50 scrollBar`}>
+      <body className={`${inter.className} flex flex-row bg-gray-50 gap-2 scrollBar`}>
         <SiteContextProvider 
         user={user}
         team={team}
         >
           <MainMenu/>
           {children}
+          <LastNews/>
           <ToastContainer
             position="bottom-left"
             autoClose={5000}

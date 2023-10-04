@@ -34,6 +34,14 @@ export type teamType = {
     dateTime: Date
 }
 
+export type wallType = {
+    _id: ObjectId,
+    from: string,
+    to: string,
+    content: string,
+    dateTime: Date
+}
+
 export type siteContextType = {
     user?: userType | null | undefined,
     team?: teamType | null | undefined

@@ -45,8 +45,8 @@ export default function PageView({ token, teamUrl, initialPosts, initialUsers, t
                     const user = users.find((u) => u._id.toString() == post.from)
                     if (user) {
                         return(
-                            <div>
-                                <div key={`teamWallPost${post._id.toString()}`} className="flex flex-row p-2 rounded items-start gap-2">
+                            <div key={`teamWallPost${post._id.toString()}`}>
+                                <div className="flex flex-row p-2 rounded items-start gap-2">
                                     <Link href={`/players/${user.username.toString()}`} className="flex flex-row gap-1 items-center link">
                                         <div className="flex w-8 h-8 rounded-full bg-blue-600 text-white text-2xl items-center justify-center">
                                             {user.avatar ? (

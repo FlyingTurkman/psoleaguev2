@@ -21,31 +21,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     if (token) {
         team = await getMyTeam(token)
     }
-    if (team) {
-        return(
-            <MyTeamContextProvider initialTeam={team}>
-                {children}
-            </MyTeamContextProvider>
-        )
-    } else {
-        return(
-            <MyTeamContextProvider initialTeam={team}>
-                <div className="w-full flex flex-col h-screen items-center justify-center text-xl font-semibold">
-                    <div className="flex flex-row">
-                        <Link href={'/my-team/create'} className="flex flex-row gap-2 p-2 rounded-l bg-blue-600 text-white items-center">
-                            <IoShirt/>
-                            <label className="cursor-pointer">Create a team</label>
-                        </Link>
-                        <Link href={'/teams'} className="flex flex-row gap-2 p-2 rounded-r bg-white text-blue-600 items-center">
-                            <label className="cursor-pointer">Join a team</label>
-                            <IoPeople/>
-                        </Link>
-                    </div>
-                </div>
-            </MyTeamContextProvider>
-        )
-    }
-
+    return(
+        <MyTeamContextProvider initialTeam={team}>
+            {children}
+        </MyTeamContextProvider>
+    )
 }
 
 async function getMyTeam(token: string): Promise<teamType | null | undefined> {

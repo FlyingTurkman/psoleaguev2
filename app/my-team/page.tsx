@@ -1,5 +1,4 @@
-
-
+import PageView from "./PageView"
 
 
 
@@ -10,8 +9,8 @@
 
 export default function Page() {
     return(
-        <div>
-            My team
+        <div className="w-full">
+            <PageView/>
         </div>
     )
 }

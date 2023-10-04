@@ -32,7 +32,7 @@ export default async function RootLayout({
   }
   return (
     <html lang="en">
-      <body className={`${inter.className} flex flex-row bg-gray-100 scrollBar`}>
+      <body className={`${inter.className} flex flex-row bg-gray-50 scrollBar`}>
         <SiteContextProvider 
         user={user}
         team={team}

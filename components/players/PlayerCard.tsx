@@ -1,3 +1,4 @@
+
 import { teamType, userType } from "@/types";
 import { IoPeople, IoPerson } from "react-icons/io5";
 import { RiTeamFill } from 'react-icons/ri'
@@ -8,16 +9,17 @@ import countries from '../../utils/src/countries.json'
 import { positionLists } from "@/utils/src/positionLists";
 import Link from "next/link";
 import { BiBlock } from 'react-icons/bi'
-
+import { teamAvatar } from "@/utils/src/teamImages";
 
 
 
 
 export default function PlayerCard({ player, team }: { player: userType, team?: teamType }) {
+
     return(
-        <div className="flex flex-row bg-white rounded-xl p-2 border border-gray-300 gap-2">
-            <Link href={`/players/${player.username}`} className="flex flex-row gap-2">
-                <div className="flex flex-shrink-0 aspect-square w-32 h-32 rounded-full bg-gray-300 text-8xl items-center justify-center">
+        <div className="flex flex-row max-w-2xl w-full items-center justify-between bg-white rounded-xl p-2 border border-gray-300 gap-2">
+            <Link href={`/players/${player.username}`} className="flex flex-row basis-1/2 gap-2">
+                <div className="flex flex-shrink-0 aspect-square w-32 h-32 rounded-full bg-blue-600 text-white text-8xl items-center justify-center">
                     {player.avatar && (
                         <Image
                         src={`${process.env.storagePath}/players/${player._id.toString()}/${player.avatar}`}
@@ -44,15 +46,16 @@ export default function PlayerCard({ player, team }: { player: userType, team?: 
                     </div>
                 </div>
             </Link>
-            <Link href={`team/${team?._id.toString()}`} className="flex flex-row border-l border-l-gray-300 px-2 gap-2">
-                <div className="flex flex-shrink-0 aspect-square w-32 h-32 rounded-full bg-gray-300 p-2 text-8xl items-center justify-center">
+            <Link href={`team/${team?._id.toString()}`} className="flex flex-row-reverse basis-1/2 border-l border-l-gray-300 px-2 gap-2">
+                <div className="flex flex-shrink-0 aspect-square w-32 h-32 rounded-full bg-blue-600 p-2 text-8xl items-center justify-center text-white">
                     {!team && (
                         <BiBlock/>
                     )}
                     {team && team.avatar && (
                         <Image
-                        src={`${process.env.storagePath}/teams/${player._id.toString()}/${team.avatar}`}
+                        src={`${process.env.storagePath}/${teamAvatar(team._id.toString(), team.avatar)}`}
                         alt={team.teamName}
+                        loading="lazy"
                         loader={imageLoader}
                         width={300}
                         height={300}
@@ -60,7 +63,7 @@ export default function PlayerCard({ player, team }: { player: userType, team?: 
                         />
                     )}
                     {team && !player.avatar && (
-                        <RiTeamFill/>
+                        <IoPeople/>
                     )}
                     
                 </div>
@@ -71,7 +74,10 @@ export default function PlayerCard({ player, team }: { player: userType, team?: 
                         ): 'Free Agent'}
                     </label>
                     {team && (
-                        <label className="text-gray-600 cursor-pointer">Turkey</label>
+                        <div className="flex flex-row items-center gap-1 text-gray-600">
+                            <ReactCountryFlag countryCode={team.country} svg/>
+                            <label className="cursor-pointer">{team.country}</label>
+                        </div>
                     )}
                 </div>
             </Link>

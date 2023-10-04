@@ -1,25 +1,28 @@
-import { teamType } from "@/types"
+import { teamType, userType } from "@/types"
 import PageView from "./PageView"
 import { Teams } from "@/utils/mongodb/models"
 
 
 
 
-
+type pageProps = {
+    teams: teamType[],
+    users: userType[]
+}
 
 
 
 export default async function Page() {
-    const teams: teamType[] = await getTeams()
+    const { teams, users }: { teams: teamType[], users: userType[] } = await getTeams()
     return(
         <div className="flex flex-col w-full items-center">
-            <PageView initialTeams={teams}/>
+            <PageView initialTeams={teams} initialUsers={users}/>
         </div>
     )
 }
 
 
-export async function getTeams(): Promise<teamType[]> {
+export async function getTeams(): Promise<pageProps> {
     try {
         const resTeams = await fetch(`${process.env.appPath}/api/teamApi/getLastTeamsApi`, {
             method: 'POST',
@@ -29,16 +32,16 @@ export async function getTeams(): Promise<teamType[]> {
             cache: 'no-cache'
         })
 
-        const res = await resTeams.json()
+        const { teams, users } = await resTeams.json()
 
         if (resTeams.status == 200) {
-            return res
+            return { teams, users }
         } else {
-            return []
+            return { teams: [], users: [] }
         }
     } catch (error) {
         console.log(error)
-        return []
+        return { teams: [], users: []}
     }
 }
 

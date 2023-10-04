@@ -44,3 +44,7 @@ h3 {
 .menuLink {
   @apply flex flex-row font-semibold items-center gap-2 p-2 hover:bg-blue-800 transition-all rounded-full
 }
+
+.link {
+  @apply hover:underline
+}

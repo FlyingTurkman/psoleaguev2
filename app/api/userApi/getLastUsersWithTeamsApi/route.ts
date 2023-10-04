@@ -27,8 +27,8 @@ export async function POST(req: NextRequest) {
             email: 0
         }).sort({ dateTime: -1 }).limit(page * 20)
 
-        const teamIds: ObjectId[] | null = players.filter((p) => p.teamId).map((user) => {
-            return new ObjectId(user.teamId || '')
+        const teamIds: string[] | null = players.filter((p) => p.teamId).map((user) => {
+            return user.teamId || ''
 
         })
 

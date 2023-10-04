@@ -20,6 +20,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     let team: teamType | null | undefined
     if (token) {
         team = await getMyTeam(token)
+        console.log(team)
     }
     return(
         <MyTeamContextProvider initialTeam={team}>

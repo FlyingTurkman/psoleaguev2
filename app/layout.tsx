@@ -7,6 +7,8 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SiteContextProvider from '@/components/SiteContextProvider';
 import { teamType, userType } from '@/types';
+import { Teams } from '@/utils/mongodb/models';
+import { ObjectId } from 'mongodb';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -26,7 +28,7 @@ export default async function RootLayout({
   let team: teamType | null | undefined = null
   if (token) {
     user = await getUser(token)
-    if (user?.teamId) {
+    if (user && user.teamId) {
       team = await getTeam(user.teamId)
     }
   }
@@ -89,10 +91,10 @@ async function getTeam(teamId: string): Promise<teamType | null | undefined> {
       body: JSON.stringify({
         apiSecret: process.env.apiSecret,
         teamId
-      })
+      }),
+      cache: 'no-cache'
     })
     const res = await resTeam.json()
-
     if (resTeam.status == 200) {
       return res
     } else {

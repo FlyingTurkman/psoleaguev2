@@ -31,8 +31,8 @@ export async function POST(req: NextRequest) {
         if (!user.teamId) {
             return NextResponse.json(null, { status: 200 })
         }
-        const team: teamType | null | undefined = await Teams.findOne({ _id: new ObjectId(user.teamId) })
 
+        const team: teamType | null | undefined = await Teams.findOne({ _id: user.teamId })
         return NextResponse.json(team, { status: 200 })
     } catch (error) {
         console.log(error)

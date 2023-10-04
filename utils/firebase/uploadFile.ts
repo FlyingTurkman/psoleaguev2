@@ -3,10 +3,10 @@ import { ref, uploadString } from 'firebase/storage'
 
 
 
-export async function uploadFile({ image, imagePath, metaData }: { image: string, imagePath: string, metaData?: string }): Promise<boolean> {
+export async function uploadFile({ file, filePath, metaData }: { file: string, filePath: string, metaData?: string }): Promise<boolean> {
     try {
-        const storageRef = ref(storage, imagePath)
-        await uploadString(storageRef, image, 'data_url', { contentType: metaData })
+        const storageRef = ref(storage, filePath)
+        await uploadString(storageRef, file, 'data_url', { contentType: metaData })
         return true
     } catch (error) {
         console.log(error)

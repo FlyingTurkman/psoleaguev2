@@ -25,6 +25,7 @@ export type teamType = {
     _id: ObjectId,
     teamName: string,
     teamTag: string,
+    teamUrl: string,
     owner: string,
     captain: string,
     coCaptain?: string,
@@ -56,6 +57,12 @@ export type myTeamPageContextType = {
     setTeam: Dispatch<teamType | null | undefined>
 }
 
+
+declare module "bson" {
+    interface ObjectId {
+      _id: this;
+    }
+  }
 
 declare global {
     namespace NodeJS {

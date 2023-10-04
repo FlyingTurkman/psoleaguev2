@@ -64,6 +64,15 @@ export const teamSchema = new Schema<teamType>({
     },
     teamTag: {
         type: String,
+        required: true,
+        match: /[a-zA-Z0-9]/
+    },
+    teamUrl: {
+        type: String,
+        required: true
+    },
+    country: {
+        type: String,
         required: true
     },
     owner: {
@@ -72,7 +81,7 @@ export const teamSchema = new Schema<teamType>({
     },
     captain: {
         type: String,
-        required: true
+        rqeuired: true
     },
     coCaptain: {
         type: String,
@@ -81,10 +90,6 @@ export const teamSchema = new Schema<teamType>({
     avatar: {
         type: String,
         required: false
-    },
-    country: {
-        type: String,
-        required: true
     },
     dateTime: {
         type: Date,

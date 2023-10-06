@@ -1,5 +1,6 @@
 import { ObjectId } from "mongodb"
 import { Dispatch } from 'react'
+import { matchAwayWin, matchCanceled, matchDraw, matchHomeWin, matchNotPlayed, matchPlaying, matchResultWaiting } from "./utils/src/constants"
 
 
 export {}
@@ -39,6 +40,25 @@ export type wallType = {
     from: string,
     to: string,
     content: string,
+    dateTime: Date
+}
+
+export type matchType = {
+    _id: ObjectId,
+    leagueId: string,
+    home?: {
+        teamId?: string,
+        players?: string[],
+        score?: number,
+        captain?: string
+    },
+    away?: {
+        teamId?: string,
+        players?: string[],
+        score?: number,
+        captain?: string
+    },
+    result: typeof matchNotPlayed | typeof matchPlaying | typeof matchResultWaiting | typeof matchHomeWin | typeof matchDraw | typeof matchAwayWin | typeof matchCanceled,
     dateTime: Date
 }
 

@@ -40,6 +40,7 @@ export default function PageView({ token, teamUrl, initialPosts, initialUsers, t
                 {posts.map((post) => {
                     const user = users.find((u) => u._id.toString() == post.from)
                     if (user) {
+                        /* TODO: buraya observation container eklenecek */
                         return(
                             <WallPost key={`teamWallPost${post._id.toString()}`} post={post} user={user} token={token}/>
                         )

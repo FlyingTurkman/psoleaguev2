@@ -1,5 +1,6 @@
-import { teamType, userType, wallType } from "@/types";
+import { matchType, teamType, userType, wallType } from "@/types";
 import { Schema } from "mongoose";
+import { matchAwayWin, matchCanceled, matchDraw, matchHomeWin, matchNotPlayed, matchPlaying, matchResultWaiting } from "../src/constants";
 
 
 
@@ -121,4 +122,49 @@ export const wallSchema = new Schema<wallType>({
         type: Date,
         required: true
     }
+})
+
+
+export const matchSchema = new Schema<matchType>({
+    _id: {
+        type: Schema.Types.ObjectId,
+        required: true
+    },
+    home: {
+        teamId: {
+            type: String,
+            required: false
+        },
+        players: [String],
+        score: {
+            type: Number,
+            required: false
+        },
+        captain: {
+            type: String,
+            required: false
+        }
+    },
+    away: {
+        teamId: {
+            type: String,
+            required: false
+        },
+        players: [String],
+        score: {
+            type: Number,
+            required: false
+        },
+        captain: {
+            type: String,
+            required: false
+        }
+    },
+    result: {
+        type: Number,
+        required: true,
+        min: 0,
+        max: 6
+    },
+    dateTime: Date
 })

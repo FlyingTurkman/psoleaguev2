@@ -20,7 +20,7 @@ export default async function RootLayout({ children, params }: { children: React
     }
     return(
         <div>
-            <TeamHeader team={team}/>
+            <TeamHeader team={team} teamUrl={params.teamUrl}/>
             {children}
         </div>
     )

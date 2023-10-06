@@ -17,7 +17,7 @@ import { AiFillEdit } from 'react-icons/ai'
 
 
 
-export default function TeamHeader({ team }: { team: teamType }) {
+export default function TeamHeader({ team, teamUrl }: { team: teamType, teamUrl: string }) {
     const route = usePathname()
     return(
         <div className="flex flex-col">
@@ -47,17 +47,17 @@ export default function TeamHeader({ team }: { team: teamType }) {
                     </div>
                 </div>
             </div>
-            <div className="flex flex-row bg-blue-600 p-2 gap-1 text-white items-center justify-center">
-                <Link href={`${route}/wall`} className={`${route.includes('wall') ? 'subMenuLinkActive' : 'subMenuLink'}`}>
+            <div className="flex flex-row bg-blue-600 p-2 gap-1 text-white items-center justify-center rounded">
+                <Link href={`/teams/${teamUrl}/wall`} className={`${route.includes('wall') ? 'subMenuLinkActive' : 'subMenuLink'}`}>
                     <AiFillEdit/>
                 </Link>
-                <Link href={`${route}/calendar`} className="subMenuLink">
+                <Link href={`/teams/${teamUrl}/calendar`} className={`${route.includes('calendar') ? 'subMenuLinkActive' : 'subMenuLink'}`}>
                     <IoCalendarNumberSharp/>
                 </Link>
-                <Link href={`${route}/players`} className="subMenuLink">
+                <Link href={`/teams/${teamUrl}/players`} className={`${route.includes('players') ? 'subMenuLinkActive' : 'subMenuLink'}`}>
                     <IoPeople/>
                 </Link>
-                <Link href={`${route}/next-matches`} className="subMenuLink">
+                <Link href={`/teams/${teamUrl}/next-matches`} className={`${route.includes('next-matches') ? 'subMenuLinkActive' : 'subMenuLink'}`}>
                     <TbPlayFootball/>
                 </Link>
             </div>

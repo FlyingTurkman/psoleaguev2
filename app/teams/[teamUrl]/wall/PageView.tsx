@@ -6,11 +6,7 @@ import { useState } from "react"
 import { toast } from "react-toastify"
 import { userType, wallType } from "@/types"
 import { WVList } from "virtua"
-import Image from "next/image"
-import { userAvatar } from "@/utils/src/userImages"
-import { imageLoader } from "@/utils/src/imageLoader"
-import { IoPeople } from "react-icons/io5"
-import Link from "next/link"
+import WallPost from "@/components/teams/WallPost"
 
 
 
@@ -35,7 +31,7 @@ export default function PageView({ token, teamUrl, initialPosts, initialUsers, t
         <div className="flex flex-col gap-2 p-2">
             <form className="flex flex-col p-2 bg-slate-100 border border-gray-300" onSubmit={formik.handleSubmit}>
                 <label className="formLabel" htmlFor="content">Type your post</label>
-                <textarea className="formInput" id="content" onChange={formik.handleChange}/>
+                <textarea className="formInput min-h-[125px]" id="content" onChange={formik.handleChange}/>
                 <Button className="buttonPrimary my-2 ml-auto" loading={loading}>
                     Post It!
                 </Button>
@@ -45,39 +41,11 @@ export default function PageView({ token, teamUrl, initialPosts, initialUsers, t
                     const user = users.find((u) => u._id.toString() == post.from)
                     if (user) {
                         return(
-                            <div key={`teamWallPost${post._id.toString()}`}>
-                                <div className="flex flex-row p-2 rounded items-start gap-2">
-                                    <Link href={`/players/${user.username.toString()}`} className="flex flex-row gap-1 items-center link">
-                                        <div className="flex w-8 h-8 rounded-full bg-blue-600 text-white text-2xl items-center justify-center">
-                                            {user.avatar ? (
-                                                <Image
-                                                src={`${process.env.storagePath}/${userAvatar(user._id.toString(), user.avatar)}`}
-                                                loader={imageLoader}
-                                                alt={user.username}
-                                                width={32}
-                                                height={32}
-                                                className="flex w-full h-full object-cover rounded-full"
-                                                />
-                                            ): (
-                                                <IoPeople/>
-                                            )}
-                                        </div>
-                                        <label className="cursor-pointer font-semibold">{user.username}</label>
-                                    </Link>
-                                    <div className="flex flex-col w-full">
-                                        <p className="text-gray-600 p-1">{post.content}</p>
-                                        <p className="text-gray-600 text-xs ml-auto">{new Date(post.dateTime).toLocaleString()}</p>
-                                    </div>
-                                    
-                                </div>
-                                <hr/>
-                            </div>
-    
+                            <WallPost key={`teamWallPost${post._id.toString()}`} post={post} user={user} token={token}/>
                         )
                     } else {
                         return null
                     }
-
                 })}
             </WVList>
         </div>

@@ -33,8 +33,12 @@ h3 {
   @apply text-red-600
 }
 
-.buttonPrimary {
+.buttonPrimary, .buttonRed {
   @apply bg-blue-600 hover:bg-blue-800 text-white p-2 rounded disabled:bg-gray-600 disabled:hover:bg-gray-800 transition-all
+}
+
+.buttonRed {
+  @apply bg-red-600 hover:bg-red-800
 }
 
 .scrollBar {

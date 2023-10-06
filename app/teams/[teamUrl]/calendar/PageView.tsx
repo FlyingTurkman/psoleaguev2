@@ -47,10 +47,12 @@ export default function PageView({ initialMatches, initialTeams, initialPlayers 
                         homeTeam={homeTeam}
                         awayTeam={awayTeam}
                         homePlayers={homePlayers}
-                        awayPlayers={awayPlayers}/>
+                        awayPlayers={awayPlayers}
+                        matchTime={match.dateTime}
+                        homeScore={match.home?.score}
+                        awayScore={match.away?.score}/>
                     )
                 })}
-                <MatchCard/>
             </WVList>
         </div>
     )

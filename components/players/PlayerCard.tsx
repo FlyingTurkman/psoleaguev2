@@ -17,7 +17,7 @@ import { teamAvatar } from "@/utils/src/teamImages";
 export default function PlayerCard({ player, team }: { player: userType, team?: teamType }) {
 
     return(
-        <div className="flex flex-row max-w-2xl w-full items-center justify-between bg-white rounded-xl p-2 border border-gray-300 gap-2">
+        <div className="flex flex-row mx-auto max-w-2xl w-full items-center justify-between bg-white rounded-xl p-2 border border-gray-300 gap-2">
             <Link href={`/players/${player.username}`} className="flex flex-row basis-1/2 gap-2">
                 <div className="flex flex-shrink-0 aspect-square w-32 h-32 rounded-full bg-blue-600 text-white text-8xl items-center justify-center">
                     {player.avatar && (

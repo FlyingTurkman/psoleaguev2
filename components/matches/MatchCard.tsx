@@ -54,7 +54,7 @@ export default function MatchCard({ homeTeam, awayTeam, homePlayers, awayPlayers
                     <hr className="w-full border border-gray-300"/>
                     {homePlayers?.map((player) => {
                         return(
-                            <Link href={`/`} className="flex flex-row gap-1 link items-center">
+                            <Link key={`homePlayerList${player._id.toString()}`} href={`/`} className="flex flex-row gap-1 link items-center">
                                 <div className="flex w-8 h-8 aspect-square rounded-full bg-blue-600 text-white text-xl items-center justify-center">
                                     {player?.avatar? (
                                         <Image
@@ -99,7 +99,7 @@ export default function MatchCard({ homeTeam, awayTeam, homePlayers, awayPlayers
                     <hr className="w-full border border-gray-300"/>
                     {awayPlayers?.map((player) => {
                         return(
-                            <Link href={`/`} className="flex flex-row gap-1 link items-center">
+                            <Link key={`awayPlayerList${player._id.toString()}`} href={`/`} className="flex flex-row gap-1 link items-center">
                                 <div className="flex w-8 h-8 aspect-square rounded-full bg-blue-600 text-white text-xl items-center justify-center">
                                     {player?.avatar? (
                                         <Image

@@ -19,7 +19,7 @@ type pageProps = {
 export default async function Page({ params }: { params: { teamUrl: string } }) {
     const cookieStore = cookies()
     const token = cookieStore.get('token')?.value
-    const { posts, users, teamId }: { posts: wallType[], users: userType[], teamId: string | undefined } = await getWalls(params.teamUrl)
+    const { posts, users, teamId }: pageProps = await getWalls(params.teamUrl)
     if (!teamId) {
         notFound()
     }

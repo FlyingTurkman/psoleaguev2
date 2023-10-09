@@ -1,16 +1,19 @@
 'use client'
-import Button from "@/components/Button"
+import { useState } from "react"
+import { userType, wallType } from "@/types"
 import { useFormik } from "formik"
 import * as Yup from 'yup'
-import { useState } from "react"
-import { toast } from "react-toastify"
-import { userType, wallType } from "@/types"
 import { WVList } from "virtua"
+import Button from "@/components/Button"
 import WallPost from "@/components/teams/WallPost"
+import { toast } from "react-toastify"
 
 
 
-export default function PageView({ token, teamUrl, initialPosts, initialUsers, teamId }: { token?: string, teamUrl: string, initialPosts?: wallType[], initialUsers?: userType[], teamId: string }) {
+
+
+
+export default function PageView({ token, initialPosts, initialUsers, userId }: { token?: string, initialPosts?: wallType[], initialUsers?: userType[], userId: string }) {
     const [posts, setPosts] = useState<wallType[]>(initialPosts || [])
     const [users, setUsers] = useState<userType[]>(initialUsers || [])
     const formik = useFormik({
@@ -19,13 +22,14 @@ export default function PageView({ token, teamUrl, initialPosts, initialUsers, t
         },
         onSubmit: ({ content }) => {
             toast.promise(sendPost({ content }), {
-                pending: 'Please wait.'
+                pending: 'Your post is sending please wait'
             })
         },
         validationSchema: Yup.object({
             content: Yup.string().required('Please type a post').min(10, 'Need more').max(200, 'It is too much')
         })
     })
+
     const [loading, setLoading] = useState<boolean>(false)
     return(
         <div className="flex flex-col gap-2 p-2">
@@ -42,7 +46,7 @@ export default function PageView({ token, teamUrl, initialPosts, initialUsers, t
                     if (user) {
                         /* TODO: buraya observation container eklenecek */
                         return(
-                            <WallPost key={`teamWallPost${post._id.toString()}`} post={post} user={user} token={token}/>
+                            <WallPost key={`userWallPost${post._id.toString()}`} post={post} user={user} token={token}/>
                         )
                     } else {
                         return null
@@ -57,12 +61,12 @@ export default function PageView({ token, teamUrl, initialPosts, initialUsers, t
 
         setLoading(true)
         try {
-            const resPost = await fetch(`${process.env.appPath}/api/wallApi/sendPostApi`, {
+            const resPost =  await fetch(`${process.env.appPath}/api/wallApi/sendPostApi`, {
                 method: 'POST',
                 body: JSON.stringify({
                     apiSecret: process.env.apiSecret,
                     token,
-                    to: teamId,
+                    to: userId,
                     content
                 })
             })
@@ -76,7 +80,7 @@ export default function PageView({ token, teamUrl, initialPosts, initialUsers, t
             }
         } catch (error) {
             console.log(error)
-            toast.error('An eror has occured')
+            toast.error('An error has occured')
         }
         setLoading(false)
     }

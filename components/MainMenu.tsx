@@ -8,7 +8,7 @@ import { siteContextType } from "@/types";
 import { Menu } from "@headlessui/react";
 import Image from "next/image";
 import { imageLoader } from "@/utils/src/imageLoader";
-
+import { MdHub, MdOutlineHub } from 'react-icons/md'
 
 
 
@@ -57,6 +57,19 @@ export default function MainMenu() {
                         </div>
                     )}
                     <label className="cursor-pointer">Teams</label>
+                </Link>
+                <Link href={'/hub'} className="menuLink">
+                    { pathname.startsWith('/hub') && (
+                        <div className="text-2xl">
+                            <MdHub/>
+                        </div>
+                    )}
+                    {!pathname.startsWith('/hub') && (
+                        <div className="text-2xl">
+                            <MdOutlineHub/>
+                        </div>
+                    )}
+                    <label className="cursor-pointer">Hub</label>
                 </Link>
             </div>
             <Menu as={'div'} className={'flex flex-col relative mt-auto p-2 transition-all'}>

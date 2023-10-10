@@ -18,7 +18,8 @@ export type userType = {
     mainPosition?: number,
     sidePosition?: number,
     teamId?: string,
-    dateTime: Date
+    dateTime: Date,
+    elo: number
 }
 
 
@@ -60,6 +61,25 @@ export type matchType = {
     },
     result: typeof matchNotPlayed | typeof matchPlaying | typeof matchResultWaiting | typeof matchHomeWin | typeof matchDraw | typeof matchAwayWin | typeof matchCanceled,
     dateTime: Date
+}
+
+export type queueType = {
+    _id: ObjectId,
+    queueName: string,
+    queueUrl: string,
+    minElo: number,
+    maxElo: number,
+    players?: queuePlayerType[]
+}
+
+type queuePlayerType = {
+    _id: Object,
+    playerId: string,
+    username: string,
+    mainPosition: number,
+    sidePosition: number,
+    elo: number,
+    lastPing: Date
 }
 
 export type siteContextType = {

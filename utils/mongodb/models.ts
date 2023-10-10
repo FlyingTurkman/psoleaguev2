@@ -1,6 +1,6 @@
-import { matchType, teamType, userType, wallType } from "@/types";
+import { matchType, teamType, userType, wallType, queueType } from "@/types";
 import mongoose from "mongoose";
-import { matchSchema, teamSchema, userSchema, wallSchema } from "./schemas";
+import { matchSchema, queueSchema, teamSchema, userSchema, wallSchema } from "./schemas";
 
 
 
@@ -20,3 +20,5 @@ export const Teams = mongoose.models.teams || mongoose.model<teamType>('teams', 
 export const Walls = mongoose.models.walls || mongoose.model<wallType>('walls', wallSchema)
 
 export const Matches = mongoose.models.matches || mongoose.model<matchType>('matches', matchSchema)
+
+export const Queues = mongoose.models.queues || mongoose.model<queueType>('queues', queueSchema)

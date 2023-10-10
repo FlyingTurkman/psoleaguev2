@@ -63,13 +63,23 @@ export type matchType = {
     dateTime: Date
 }
 
-export type queueType = {
+/* export type queueType = {
     _id: ObjectId,
     queueName: string,
     queueUrl: string,
     minElo: number,
     maxElo: number,
     players?: queuePlayerType[]
+} */
+
+
+export type queueType = {
+    _id: ObjectId,
+    queueName: string,
+    queueUrl: string,
+    minElo: number,
+    maxElo: number,
+    players?: string[]
 }
 
 type queuePlayerType = {

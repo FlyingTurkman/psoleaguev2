@@ -175,7 +175,7 @@ export const matchSchema = new Schema<matchType>({
 
 
 
-export const queueSchema = new Schema<queueType>({
+/* export const queueSchema = new Schema<queueType>({
     _id: {
         type: Schema.Types.ObjectId,
         required: true
@@ -224,4 +224,28 @@ export const queueSchema = new Schema<queueType>({
             }
         }
     ]
+}) */
+
+export const queueSchema = new Schema<queueType>({
+    _id: {
+        type: Schema.Types.ObjectId,
+        required: true
+    },
+    queueName: {
+        type: String,
+        required: true
+    },
+    queueUrl: {
+        type: String,
+        required: true
+    },
+    minElo: {
+        type: Number,
+        required: true
+    },
+    maxElo: {
+        type: Number,
+        required: true
+    },
+    players: [String]
 })

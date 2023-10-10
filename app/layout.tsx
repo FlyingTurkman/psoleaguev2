@@ -6,9 +6,9 @@ import { cookies } from 'next/headers';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SiteContextProvider from '@/components/SiteContextProvider';
-import { teamType, userType } from '@/types';
-import { Teams } from '@/utils/mongodb/models';
-import { ObjectId } from 'mongodb';
+import { queueType, teamType, userType } from '@/types';
+import { Queues, Teams } from '@/utils/mongodb/models';
+import { ChangeStreamDocument, ObjectId } from 'mongodb';
 import LastNews from '@/components/LastNews';
 
 const inter = Inter({ subsets: ['latin'] })
@@ -27,12 +27,43 @@ export default async function RootLayout({
   const token = cookieStore.get('token')?.value
   let user: userType | null | undefined = null
   let team: teamType | null | undefined = null
+  let queue: queueType | null | undefined = null
   if (token) {
     user = await getUser(token)
     if (user && user.teamId) {
       team = await getTeam(user.teamId)
+      queue = await getQueue(user._id.toString())
+      if (queue) {
+        try {
+          const queueChangeStream = Queues.watch([], { fullDocument: 'updateLookup'})
+      
+          queueChangeStream.on('change', (changeEvent: ChangeStreamDocument) => {
+            if (changeEvent.operationType == 'update' && changeEvent.fullDocument) {
+              const newQueue = changeEvent.fullDocument
+              if (newQueue.players.includes(user?._id.toString())) {
+                queue = {
+                  _id: newQueue._id.toString(),
+                  maxElo: newQueue.maxElo,
+                  minElo: newQueue.minElo,
+                  queueName: newQueue.queueName,
+                  queueUrl: newQueue.queueUrl,
+                  players: newQueue.players
+                }
+              } else {
+                queue = null
+              }
+            } else {
+              console.log('change even false', false)
+            }
+          })
+        } catch (error) {
+          console.log(error)
+        }
+      }
     }
   }
+
+  console.log('queue', queue)
   return (
     <html lang="en">
       <body className={`${inter.className} flex flex-row bg-gray-50 gap-2 scrollBar`}>
@@ -102,6 +133,53 @@ async function getTeam(teamId: string): Promise<teamType | null | undefined> {
     } else {
       return undefined
     }
+  } catch (error) {
+    console.log(error)
+    return undefined
+  }
+}
+
+
+async function getQueue(userId: string): Promise<queueType | null | undefined> {
+  try {
+    const queue: queueType | null | undefined = await Queues.findOne({
+      players: { $in: userId }
+    })
+    return queue
+  } catch (error) {
+    console.log(error)
+    return undefined
+  }
+}
+
+
+async function getQueueStream(queueId: string): Promise<queueType | null | undefined> {
+  /* try {
+    const queueChangeStream = Queues.watch()
+    let queue: queueType | null | undefined = null
+    queueChangeStream.on('change', async (changeEvent: ChangeStreamDocument) => {
+      if (changeEvent.operationType == 'update' || changeEvent.operationType == 'modify' || changeEvent.operationType == 'create') {
+        queue = await Queues.findOne({
+          players: { $in: userId }
+        })
+      }
+    })
+    return queue
+  } catch (error) {
+    console.log(error)
+    return undefined
+  } */
+
+  try {
+    const queueChangeStream = Queues.watch([{ $match: { _id: queueId }}])
+    queueChangeStream.on('change', (changeEvent: ChangeStreamDocument) => {
+      if (changeEvent.operationType == 'update' && changeEvent.fullDocument) {
+        console.log('change event', changeEvent.fullDocument)
+        return changeEvent.fullDocument
+      } else {
+        console.log('no konsol')
+      }
+    })
   } catch (error) {
     console.log(error)
     return undefined

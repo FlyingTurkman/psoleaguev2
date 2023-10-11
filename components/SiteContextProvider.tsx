@@ -13,11 +13,18 @@ export default function SiteContextProvider({ children, user, team, queue, token
     useEffect(() => {
         const queueInterval = setInterval(() => {
             if (queue) {
-                console.log('last login updated')
+                updateLastOnline()
             }
-        }, 5000)
+        }, 10000)
+
+        const onlineInterval = setInterval(() => {
+            if (queue) {
+                updateQueuePlayers()
+            }
+        }, 20000)
         return () => {
             clearInterval(queueInterval)
+            clearInterval(onlineInterval)
         }
     }, [queue])
     const siteData: siteContextType = {
@@ -30,4 +37,32 @@ export default function SiteContextProvider({ children, user, team, queue, token
             {children}
         </SiteContext.Provider>
     )
+
+    async function updateLastOnline() {
+        try {
+            await fetch(`${process.env.appPath}/api/userApi/lastOnlineUpdateApi`, {
+                method: 'POST',
+                body: JSON.stringify({
+                    apiSecret: process.env.apiSecret,
+                    token
+                })
+            })
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async function updateQueuePlayers() {
+        try {
+            await fetch(`${process.env.appPath}/api/queueApi/updateQueuePlayersApi`, {
+                method: 'POST',
+                body: JSON.stringify({
+                    apiSecret: process.env.apiSecret,
+                    queueId: queue?._id.toString()
+                })
+            })
+        } catch (error) {
+            console.log(error)
+        }
+    }
 }

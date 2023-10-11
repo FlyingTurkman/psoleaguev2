@@ -65,7 +65,7 @@ export default function PageView() {
 
             if (resLogin.status == 200) {
                 toast.success('You are succesfully logged in')
-                router.push('/')
+                router.refresh()
             } else {
                 toast.error(res)
             }

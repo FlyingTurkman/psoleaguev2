@@ -30,7 +30,7 @@ export default async function RootLayout({
   let queue: queueType | null | undefined = null
   if (token) {
     user = await getUser(token)
-    if (user && user.teamId) {
+    if (user) {
       team = await getTeam(user.teamId)
       queue = await getQueue(user._id.toString())
       if (queue) {
@@ -61,8 +61,6 @@ export default async function RootLayout({
       }
     }
   }
-
-
   return (
     <html lang="en">
       <body className={`${inter.className} flex flex-row bg-gray-50 gap-2 scrollBar`}>
@@ -118,7 +116,7 @@ async function getUser(token: string): Promise<userType | null | undefined> {
   }
 }
 
-async function getTeam(teamId: string): Promise<teamType | null | undefined> {
+async function getTeam(teamId?: string): Promise<teamType | null | undefined> {
   try {
     const resTeam = await fetch(`${process.env.appPath}/api/teamApi/getCurrentTeamApi`, {
       method: 'POST',

@@ -27,6 +27,7 @@ export async function POST(req: NextRequest) {
                 lastOnline: new Date()
             }
         })
+        return NextResponse.json(true, { status: 200 })
     } catch (error) {
         console.log(error)
         return NextResponse.json('An error has occured', { status: 400 })

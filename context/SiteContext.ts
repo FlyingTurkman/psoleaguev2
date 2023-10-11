@@ -7,5 +7,6 @@ import { createContext } from "react";
 
 export const SiteContext = createContext<siteContextType>({
     user: null,
-    team: null
+    team: null,
+    queue: null
 })

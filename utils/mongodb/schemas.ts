@@ -54,6 +54,10 @@ export const userSchema = new Schema<userType>({
     dateTime: {
         type: Date,
         required: true
+    },
+    lastOnline: {
+        type: Date,
+        required: false
     }
 })
 

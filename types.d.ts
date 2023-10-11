@@ -19,7 +19,8 @@ export type userType = {
     sidePosition?: number,
     teamId?: string,
     dateTime: Date,
-    elo: number
+    elo: number,
+    lastOnline?: Date
 }
 
 
@@ -94,7 +95,8 @@ type queuePlayerType = {
 
 export type siteContextType = {
     user?: userType | null | undefined,
-    team?: teamType | null | undefined
+    team?: teamType | null | undefined,
+    queue?: queueType |null | undefined
 }
 
 

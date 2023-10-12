@@ -27,6 +27,7 @@ export async function POST(req: NextRequest) {
                 lastOnline: new Date()
             }
         })
+        console.log('updated last online', new Date().toLocaleString('tr-TR'))
         return NextResponse.json(true, { status: 200 })
     } catch (error) {
         console.log(error)

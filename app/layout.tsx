@@ -10,6 +10,8 @@ import { queueType, teamType, userType } from '@/types';
 import { Queues, Teams, Users } from '@/utils/mongodb/models';
 import { ChangeStreamDocument, ObjectId } from 'mongodb';
 import LastNews from '@/components/LastNews';
+import cron from 'node-cron'
+
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -57,10 +59,11 @@ export default async function RootLayout({
         } catch (error) {
           console.log(error)
         }
-        
       }
     }
   }
+
+
   return (
     <html lang="en">
       <body className={`${inter.className} flex flex-row bg-gray-50 gap-2 scrollBar`}>

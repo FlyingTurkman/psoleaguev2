@@ -12,7 +12,7 @@ export default function HubHeader() {
     const route = usePathname()
     return(
         <div className="flex flex-row gap-1 p-2 rounded bg-blue-600 text-white">
-            <Link href={'/hub/queue'} className={`${route.includes('queue') ? 'subMenuLinkActive' : 'subMenuLink'}`}>
+            <Link href={'/hub/queues'} className={`${route.includes('queue') ? 'subMenuLinkActive' : 'subMenuLink'}`}>
                 <GiTabletopPlayers/>
             </Link>
             <Link href={'/hub/leaderboard'} className={`${route.includes('leaderboard') ? 'subMenuLinkActive' : 'subMenuLink'}`}>

@@ -15,7 +15,7 @@ import { MdHub, MdOutlineHub } from 'react-icons/md'
 
 export default function MainMenu() {
     const pathname = usePathname()
-    const { user, team }: siteContextType = useContext(SiteContext)
+    const { user, team, queue }: siteContextType = useContext(SiteContext)
     return(
         <div className="flex flex-col gap-2 sticky top-0 left-0 max-w-[200px] max-h-screen h-screen w-full bg-blue-600 p-2 text-white z-50">
             <div className="flex flex-col gap-2 overflow-auto scrollBar">
@@ -60,12 +60,12 @@ export default function MainMenu() {
                 </Link>
                 <Link href={'/hub'} className="menuLink">
                     { pathname.startsWith('/hub') && (
-                        <div className="text-2xl">
+                        <div className={`${queue ? 'animate-spin' : ''} text-2xl`}>
                             <MdHub/>
                         </div>
                     )}
                     {!pathname.startsWith('/hub') && (
-                        <div className="text-2xl">
+                        <div className={`${queue ? 'animate-spin' : ''} text-2xl`}>
                             <MdOutlineHub/>
                         </div>
                     )}

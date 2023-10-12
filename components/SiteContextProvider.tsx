@@ -3,7 +3,7 @@ import React from "react"
 import { SiteContext } from "@/context/SiteContext"
 import { queueType, siteContextType, teamType, userType } from "@/types"
 import { useEffect } from 'react'
-
+import { clearInterval, setInterval } from 'worker-timers';
 
 
 
@@ -21,12 +21,15 @@ export default function SiteContextProvider({ children, user, team, queue, token
             if (queue) {
                 updateQueuePlayers()
             }
-        }, 20000)
+        }, 30000)
+
+        
         return () => {
             clearInterval(queueInterval)
             clearInterval(onlineInterval)
+            
         }
-    }, [queue])
+    }, [])
     const siteData: siteContextType = {
         user,
         team,
@@ -40,12 +43,14 @@ export default function SiteContextProvider({ children, user, team, queue, token
 
     async function updateLastOnline() {
         try {
+            console.log('update last online', new Date().toLocaleString('tr-TR'))
             await fetch(`${process.env.appPath}/api/userApi/lastOnlineUpdateApi`, {
                 method: 'POST',
                 body: JSON.stringify({
                     apiSecret: process.env.apiSecret,
                     token
-                })
+                }),
+                cache: 'no-cache'
             })
         } catch (error) {
             console.log(error)
@@ -54,12 +59,14 @@ export default function SiteContextProvider({ children, user, team, queue, token
 
     async function updateQueuePlayers() {
         try {
+            console.log('update players', new Date().toLocaleString('tr-TR'))
             await fetch(`${process.env.appPath}/api/queueApi/updateQueuePlayersApi`, {
                 method: 'POST',
                 body: JSON.stringify({
                     apiSecret: process.env.apiSecret,
                     queueId: queue?._id.toString()
-                })
+                }),
+                cache: 'no-cache'
             })
         } catch (error) {
             console.log(error)

@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
             return NextResponse.json('Queue has no player', { status: 200 })
         }
         let dateTime = new Date()
-        dateTime.setSeconds(dateTime.getSeconds() - 20)
+        dateTime.setSeconds(dateTime.getSeconds() - 30)
         const playerIds: string[] = queue.players.map((player) => {
             return player
         })
@@ -56,6 +56,7 @@ export async function POST(req: NextRequest) {
             }
         })
 
+        console.log('queue updated', new Date().toLocaleString('tr-TR'))
         return NextResponse.json(true, { status: 200 })
     } catch (error) {
         console.log(error)

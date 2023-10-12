@@ -55,10 +55,11 @@ export async function POST(req: NextRequest) {
             }
         })
 
-
         if (queueUpdate.matchedCount == 0) {
             return NextResponse.json('An error has occured', { status: 400 })
         }
+
+        await Users.updateOne({ _id: user._id.toString() }, { $set: { lastOnline: new Date() } })
 
         return NextResponse.json(true, { status: 200 })
     } catch (error) {

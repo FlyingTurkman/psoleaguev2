@@ -37,14 +37,21 @@ export async function POST(req: NextRequest) {
             return player
         })
 
+
         const players: userType[] = await Users.find({
-            $and: [
-                { _id: { $in: playerIds } },
-                { lastOnline: { $gt: dateTime } }
-            ]
+            _id: { $in: playerIds }
         })
 
-        const onlinePlayerIds: string[] = players.map((player) => {
+        let onlinePlayers: userType[] = []
+
+        for (const player of players) {
+            const lastOnline = new Date(player.lastOnline || Date.now())
+            const now = new Date()
+            if (now.getSeconds() - lastOnline.getSeconds() <= 30) {
+                onlinePlayers.push(player)
+            }
+        }
+        const onlinePlayerIds: string[] = onlinePlayers.map((player) => {
             return player._id.toString()
         })
         

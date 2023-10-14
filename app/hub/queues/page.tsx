@@ -3,11 +3,7 @@ import PageView from "./PageView";
 import { Queues } from "@/utils/mongodb/models";
 import { cookies } from "next/headers";
 import { ChangeStreamDocument } from "mongodb";
-
-
-
-
-
+import { io } from 'socket.io-client'
 
 
 
@@ -16,6 +12,7 @@ export default async function Page() {
     const cookieStore = cookies()
     const token = cookieStore.get('token')?.value
     let queues: queueType[] = await getQueues()
+    const socket = io('http://localhost:5000')
     if (queues.length > 0) {
         const queuesChangeStream = Queues.watch([], { fullDocument: 'updateLookup' })
         queuesChangeStream.on('change', async (changeEvent: ChangeStreamDocument) => {
@@ -31,12 +28,13 @@ export default async function Page() {
                 const oldQueues: queueType[] = queues.filter((q) => q._id.toString() != newQueue._id.toString())
                 queues = oldQueues.concat([newQueue])
             }
+            socket.emit('queues-updates', queues)
         })
-    }
 
+    }
     return(
         <div>
-            <PageView queues={queues} token={token}/>
+            <PageView initialQueues={queues} token={token}/>
         </div>
     )
 }

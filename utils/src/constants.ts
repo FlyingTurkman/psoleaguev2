@@ -12,3 +12,6 @@ export const matchHomeWin = 3
 export const matchDraw = 4
 export const matchAwayWin = 5
 export const matchCanceled = 6
+
+// socket events
+export const queuesUpdate = 'queues-updates'

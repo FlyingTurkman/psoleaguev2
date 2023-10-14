@@ -64,6 +64,22 @@ export type matchType = {
     dateTime: Date
 }
 
+export type lobbyType = {
+    _id: ObjectId,
+    lobbyName: string,
+    players: lobbyPlayerType[],
+    homeTeam?: string[],
+    awayTeam?: string[],
+    completed: boolean
+}
+
+
+type lobbyPlayerType = {
+    playerId: string,
+    accepted: boolean
+}
+
+
 /* export type queueType = {
     _id: ObjectId,
     queueName: string,
@@ -138,7 +154,9 @@ declare global {
             storageBucket: string,
             messagingSenderId: string,
             appId: string,
-            measurementId: string
+            measurementId: string,
+            socketPath: string,
+            socketPort: string
         }
     }
 }

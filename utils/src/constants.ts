@@ -15,3 +15,7 @@ export const matchCanceled = 6
 
 // socket events
 export const queuesUpdate = 'queues-updates'
+export const queueUpdate = 'queue-update'
+
+// lobby settings
+export const lobbyMaxPlayer = 16

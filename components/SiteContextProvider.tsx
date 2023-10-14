@@ -2,14 +2,40 @@
 import React from "react"
 import { SiteContext } from "@/context/SiteContext"
 import { queueType, siteContextType, teamType, userType } from "@/types"
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { clearInterval, setInterval } from 'worker-timers';
+import { io } from 'socket.io-client'
+import { queueUpdate, queuesUpdate } from "@/utils/src/constants"
+
+const socket = io(`${process.env.socketPath}:${process.env.socketPort}`)
 
 
+export default function SiteContextProvider({ children, user, team, initialQueue, token }: { children: React.ReactNode, user: userType | null | undefined, team: teamType | null | undefined, initialQueue: queueType | null | undefined, token?: string }) {
+    const [queue, setQueue] = useState<queueType | null | undefined>(initialQueue)
+    useEffect(() => {
+        socket.on(queueUpdate, (currentQueue: queueType | null | undefined) => {
+            console.log(currentQueue)
+            if (currentQueue?.players?.includes(user?._id.toString()?? 'sharkman')) {
+                setQueue(currentQueue)
+            }
+        })
 
-
-
-export default function SiteContextProvider({ children, user, team, queue, token }: { children: React.ReactNode, user: userType | null | undefined, team: teamType | null | undefined, queue: queueType | null | undefined, token?: string }) {
+        socket.on(queuesUpdate, (queues: queueType[]) => {
+            let inQueue = false
+            for (const tempQueue of queues) {
+                if (tempQueue.players?.includes(user?._id.toString()?? 'sharkman')) {
+                    inQueue = true
+                }
+            }
+            if (!inQueue){
+                setQueue(null)
+            }
+        })
+        return () => {
+            socket.off(queueUpdate)
+            socket.off(queuesUpdate)
+        }
+    }, [])
     useEffect(() => {
         const queueInterval = setInterval(() => {
             if (queue) {
@@ -23,10 +49,15 @@ export default function SiteContextProvider({ children, user, team, queue, token
             }
         }, 30000)
 
-        
+        const matchMakerInterval = setInterval(() => {
+            if (queue && queue.players && queue.players[0] == user?._id.toString()) {
+                checkMatchMaker()
+            }
+        }, 60000)
         return () => {
             clearInterval(queueInterval)
             clearInterval(onlineInterval)
+            clearInterval(matchMakerInterval)
         }
     }, [queue])
     const siteData: siteContextType = {
@@ -70,5 +101,9 @@ export default function SiteContextProvider({ children, user, team, queue, token
         } catch (error) {
             console.log(error)
         }
+    }
+
+    async function checkMatchMaker() {
+        
     }
 }

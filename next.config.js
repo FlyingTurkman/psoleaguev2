@@ -25,7 +25,9 @@ const nextConfig = {
         storageBucket: process.env.storageBucket,
         messagingSenderId: process.env.messagingSenderId,
         appId: process.env.appId,
-        measurementId: process.env.measurementId
+        measurementId: process.env.measurementId,
+        socketPath: process.env.socketPath,
+        socketPort: process.env.socketPort
     },
     /* FIXME: ignore build error hatasını düzelt sonra configden sil */
     typescript: {

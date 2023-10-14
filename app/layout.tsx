@@ -10,6 +10,9 @@ import { queueType, teamType, userType } from '@/types';
 import { Queues, Teams, Users } from '@/utils/mongodb/models';
 import { ChangeStreamDocument, ObjectId } from 'mongodb';
 import LastNews from '@/components/LastNews';
+import { io } from 'socket.io-client'
+import { queueUpdate } from '@/utils/src/constants';
+
 
 
 
@@ -38,14 +41,22 @@ export default async function RootLayout({
     if (user) {
       team = await getTeam(user.teamId)
       queue = await getQueue(user._id.toString())
+      const socket = io(`${process.env.socketPath}:${process.env.socketPort}`)
       if (queue) {
         try {
           const queueChangeStream = Queues.watch([], { fullDocument: 'updateLookup'})
       
           queueChangeStream.on('change', (changeEvent: ChangeStreamDocument) => {
             if (changeEvent.operationType == 'update' && changeEvent.fullDocument) {
-              const newQueue = changeEvent.fullDocument
-              if (newQueue.players.includes(user?._id.toString())) {
+              const newQueue = {
+                  _id: changeEvent.fullDocument._id.toString(),
+                  maxElo: changeEvent.fullDocument.maxElo,
+                  minElo: changeEvent.fullDocument.minElo,
+                  queueName: changeEvent.fullDocument.queueName,
+                  queueUrl: changeEvent.fullDocument.queueUrl,
+                  players: changeEvent.fullDocument.players
+              }
+              if (newQueue?.players?.includes(user?._id.toString())) {
                 queue = {
                   _id: newQueue._id.toString(),
                   maxElo: newQueue.maxElo,
@@ -54,8 +65,10 @@ export default async function RootLayout({
                   queueUrl: newQueue.queueUrl,
                   players: newQueue.players
                 }
+                socket.emit(queueUpdate, queue)
               } else {
                 queue = null
+                socket.emit(queueUpdate, newQueue)
               }
             }
           })
@@ -73,7 +86,7 @@ export default async function RootLayout({
         <SiteContextProvider 
         user={user}
         team={team}
-        queue={JSON.parse(JSON.stringify(queue))}
+        initialQueue={JSON.parse(JSON.stringify(queue))}
         token={token}
         >
           <MainMenu/>

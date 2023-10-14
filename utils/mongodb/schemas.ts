@@ -1,4 +1,4 @@
-import { matchType, queueType, teamType, userType, wallType } from "@/types";
+import { lobbyType, matchType, queueType, teamType, userType, wallType } from "@/types";
 import { Schema } from "mongoose";
 import { matchAwayWin, matchCanceled, matchDraw, matchHomeWin, matchNotPlayed, matchPlaying, matchResultWaiting } from "../src/constants";
 
@@ -252,4 +252,34 @@ export const queueSchema = new Schema<queueType>({
         required: true
     },
     players: [String]
+})
+
+
+export const lobbySchema = new Schema<lobbyType>({
+    _id: {
+        type: Schema.Types.ObjectId,
+        required: true
+    },
+    lobbyName: {
+        type: String,
+        required: true
+    },
+    players: [
+        {
+            playerId: {
+                type: String,
+                required: true
+            },
+            accepted: {
+                type: Boolean,
+                required: true
+            }
+        }
+    ],
+    homeTeam: [String],
+    awayTeam: [String],
+    completed: {
+        type: Boolean,
+        required: true
+    }
 })

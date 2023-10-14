@@ -12,7 +12,7 @@ export default async function Page() {
     const cookieStore = cookies()
     const token = cookieStore.get('token')?.value
     let queues: queueType[] = await getQueues()
-    const socket = io('http://localhost:5000')
+    const socket = io(`${process.env.socketPath}:${process.env.socketPort}`)
     if (queues.length > 0) {
         const queuesChangeStream = Queues.watch([], { fullDocument: 'updateLookup' })
         queuesChangeStream.on('change', async (changeEvent: ChangeStreamDocument) => {

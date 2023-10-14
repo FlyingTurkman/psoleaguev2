@@ -8,7 +8,7 @@ const httpServer = http.createServer()
 
 const io = new Server(httpServer, {
     cors: {
-        origin: 'http://localhost:3000',
+        origin: '*',
         methods: ['GET', 'POST'],
         credentials: true
     }
@@ -23,11 +23,14 @@ io.on('connection', (socket) => {
         io.emit('queues-updates', queues)
     })
 
+    socket.on('queue-update', (queue) => {
+        io.emit('queue-update', queue)
+    })
     socket.on('disconnect', () => {
         console.log('Socket disconnected', socket.id)
     })
 })
 
 httpServer.listen(5000, () => {
-    console.log('Socket runnin on 5000')
+    console.log('Socket running on ', 5000)
 })

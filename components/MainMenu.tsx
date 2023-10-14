@@ -3,7 +3,7 @@ import Link from "next/link";
 import { IoHome, IoHomeOutline, IoPeople, IoPeopleOutline, IoPerson, IoPersonOutline } from 'react-icons/io5'
 import { usePathname } from "next/navigation";
 import { SiteContext } from "@/context/SiteContext";
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import { siteContextType } from "@/types";
 import { Menu } from "@headlessui/react";
 import Image from "next/image";
@@ -16,6 +16,9 @@ import { MdHub, MdOutlineHub } from 'react-icons/md'
 export default function MainMenu() {
     const pathname = usePathname()
     const { user, team, queue }: siteContextType = useContext(SiteContext)
+    useEffect(() => {
+        console.log('main menu queue', queue)
+    }, [queue])
     return(
         <div className="flex flex-col gap-2 sticky top-0 left-0 max-w-[200px] max-h-screen h-screen w-full bg-blue-600 p-2 text-white z-50">
             <div className="flex flex-col gap-2 overflow-auto scrollBar">

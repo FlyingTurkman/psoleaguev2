@@ -3,12 +3,12 @@ import PageView from "./PageView";
 import { Queues } from "@/utils/mongodb/models";
 import { cookies } from "next/headers";
 import { ChangeStreamDocument } from "mongodb";
-import { cache} from 'react'
 
 
 
 
-export const revalidate = 5
+
+
 
 
 

@@ -28,7 +28,7 @@ export default function SiteContextProvider({ children, user, team, queue, token
             clearInterval(queueInterval)
             clearInterval(onlineInterval)
         }
-    }, [])
+    }, [queue])
     const siteData: siteContextType = {
         user,
         team,

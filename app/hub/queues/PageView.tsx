@@ -12,11 +12,6 @@ import { WVList } from "virtua"
 
 
 
-
-
-
-
-
 export default function PageView({ queues, token }: { queues?: queueType[], token?: string }) {
     return(
         <div className="p-2">

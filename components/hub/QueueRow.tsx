@@ -29,7 +29,7 @@ export default function QueueRow({ queue, token }: { queue: queueType, token?: s
             {user? (
                 <div className="flex ml-auto">
                     {queue.players?.includes(user._id.toString())? (
-                        <Button className="buttonRed">Leave Queue</Button>
+                        <Button className="buttonRed" onClick={leaveQueue} loading={loading}>Leave Queue</Button>
                     ): (
                         <Button className="buttonPrimary" onClick={joinQueue} loading={loading}>Join Queue</Button>
                     )}
@@ -56,6 +56,34 @@ export default function QueueRow({ queue, token }: { queue: queueType, token?: s
             const res = await resJoin.json()
 
             if (resJoin.status == 200) {
+                router.refresh()
+            } else {
+                toast.error(res)
+            }
+        } catch (error) {
+            console.log(error)
+            toast.error('An error has occured')
+        }
+        setLoading(false)
+    }
+
+    async function leaveQueue() {
+        if (loading) return
+
+        setLoading(true)
+        try {
+            const resLeave = await fetch(`${process.env.appPath}/api/queueApi/leaveQueueApi`, {
+                method: 'POST',
+                body: JSON.stringify({
+                    apiSecret: process.env.apiSecret,
+                    token,
+                    queueId: queue._id.toString()
+                })
+            })
+
+            const res = await resLeave.json()
+
+            if (resLeave.status == 200) {
                 router.refresh()
             } else {
                 toast.error(res)

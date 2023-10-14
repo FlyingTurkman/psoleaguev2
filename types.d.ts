@@ -20,7 +20,7 @@ export type userType = {
     teamId?: string,
     dateTime: Date,
     elo: number,
-    lastOnline?: Date
+    lastOnline: Date
 }
 
 

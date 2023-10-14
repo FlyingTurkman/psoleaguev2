@@ -17,7 +17,7 @@ const nextConfig = {
     /* FIXME: ignore build error hatasını düzelt sonra configden sil */
     typescript: {
         ignoreBuildErrors: true,
-     },
+    }
 }
 
 module.exports = nextConfig

@@ -45,9 +45,9 @@ export async function POST(req: NextRequest) {
         let onlinePlayers: userType[] = []
 
         for (const player of players) {
-            const lastOnline = new Date(player.lastOnline || Date.now())
-            const now = new Date()
-            if (now.getSeconds() - lastOnline.getSeconds() <= 30) {
+            const lastOnline = new Date(player.lastOnline).getTime()
+            const now = new Date().getTime()
+            if ((now - lastOnline) / 1000 <= 30) {
                 onlinePlayers.push(player)
             }
         }

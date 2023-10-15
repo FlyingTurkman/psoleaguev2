@@ -281,5 +281,13 @@ export const lobbySchema = new Schema<lobbyType>({
     completed: {
         type: Boolean,
         required: true
+    },
+    lobbyResult: {
+        type: Number,
+        required: true
+    },
+    acceptDeadline: {
+        type: Date,
+        required: true
     }
 })

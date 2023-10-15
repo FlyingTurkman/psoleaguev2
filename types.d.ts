@@ -70,7 +70,9 @@ export type lobbyType = {
     players: lobbyPlayerType[],
     homeTeam?: string[],
     awayTeam?: string[],
-    completed: boolean
+    completed: boolean,
+    lobbyResult: number,
+    acceptDeadline: Date
 }
 
 

@@ -21,3 +21,13 @@ export const lobbiesUpdates = 'lobbies-updates'
 
 // lobby settings
 export const lobbyMaxPlayer = 16
+export const lobbyAcceptDeadline = 15 * 1000
+export const lobbyDraftDeadline = 60 * 1000
+
+// lobby results
+export const lobbyWaitingForAccept = 0
+export const lobbyWaitingForDraft = 1
+export const lobbyCanceled = 2
+export const lobbyHomeWins = 3
+export const lobbyDraw = 4
+export const lobbyAwayWins = 5

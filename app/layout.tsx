@@ -6,12 +6,13 @@ import { cookies } from 'next/headers';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SiteContextProvider from '@/components/SiteContextProvider';
-import { queueType, teamType, userType } from '@/types';
-import { Queues, Teams, Users } from '@/utils/mongodb/models';
+import { lobbyType, queueType, teamType, userType } from '@/types';
+import { Lobbies, Queues, Teams, Users } from '@/utils/mongodb/models';
 import { ChangeStreamDocument, ObjectId } from 'mongodb';
 import LastNews from '@/components/LastNews';
 import { io } from 'socket.io-client'
-import { queueUpdate } from '@/utils/src/constants';
+import { lobbiesUpdates, lobbyUpdate, queueUpdate } from '@/utils/src/constants';
+import Lobby from '@/components/lobby/Lobby';
 
 
 
@@ -36,16 +37,19 @@ export default async function RootLayout({
   let user: userType | null | undefined = null
   let team: teamType | null | undefined = null
   let queue: queueType | null | undefined = null
+  let lobby: lobbyType | null | undefined = null
+  let lobbies: lobbyType[] = []
   if (token) {
     user = await getUser(token)
     if (user) {
       team = await getTeam(user.teamId)
       queue = await getQueue(user._id.toString())
+      lobby = await getLobby(user._id.toString())
+      lobbies = await getLobbies()
       const socket = io(`${process.env.socketPath}:${process.env.socketPort}`)
       if (queue) {
         try {
           const queueChangeStream = Queues.watch([], { fullDocument: 'updateLookup'})
-      
           queueChangeStream.on('change', (changeEvent: ChangeStreamDocument) => {
             if (changeEvent.operationType == 'update' && changeEvent.fullDocument) {
               const newQueue = {
@@ -75,6 +79,35 @@ export default async function RootLayout({
         } catch (error) {
           console.log(error)
         }
+
+        
+      }
+      try {
+        const lobbyChangeStrem = Lobbies.watch([
+          {
+            $match: {
+               'fullDocument.completed': false 
+            }
+          }
+        ], { fullDocument: 'updateLookup' })
+        lobbyChangeStrem.on('change', (changeEvent: ChangeStreamDocument) => {
+          if (changeEvent.operationType == 'update' && changeEvent.fullDocument) {
+            const newLobby: lobbyType = {
+              _id: changeEvent.fullDocument._id,
+              lobbyName: changeEvent.fullDocument.lobbyName,
+              completed: changeEvent.fullDocument.completed,
+              players: changeEvent.fullDocument.players,
+              awayTeam: changeEvent.fullDocument.awayTeam,
+              homeTeam: changeEvent.fullDocument.homeTeam
+            }
+            const oldLobbies: lobbyType[] = lobbies.filter((l) => l._id.toString() != newLobby._id.toString())
+            lobbies = oldLobbies.concat([newLobby])
+            socket.emit(lobbyUpdate, newLobby)
+            socket.emit(lobbiesUpdates, lobbies)
+          }
+        })
+      } catch (error) {
+        console.log(error)
       }
     }
   }
@@ -92,6 +125,7 @@ export default async function RootLayout({
           <MainMenu/>
           {children}
           <LastNews/>
+          <Lobby initialLobby={lobby} token={token}/>
           <ToastContainer
             position="bottom-left"
             autoClose={5000}
@@ -165,29 +199,33 @@ async function getQueue(userId: string): Promise<queueType | null | undefined> {
     })
     return queue
   } catch (error) {
+    return undefined
+  }
+}
+
+async function getLobby(userId: string): Promise<lobbyType | null | undefined> {
+  try {
+    const lobby = await Lobbies.findOne({
+      $and: [
+        { completed: false },
+        { 'players.playerId': { $in: userId } }
+      ]
+    })
+    return JSON.parse(JSON.stringify(lobby))
+  } catch (error) {
     console.log(error)
     return undefined
   }
 }
 
-async function updateLastLogin(queue: queueType | null | undefined, userId?: string) {
-
-  const interval = setInterval(async () => {
-    console.log('last login updating')
-
-    try {
-      await Users.updateOne({
-        _id: userId
-      }, {
-        $set: { lastLogin: new Date() }
-      })
-    } catch (error) {
-      console.log(error)
-    }
-  }, 5000)
-
-  return () => {
-    console.log('last login closed')
-    clearInterval(interval)
+async function getLobbies(): Promise<lobbyType[]> {
+  try {
+    const lobbies: lobbyType[] = await Lobbies.find({
+      copleted: false
+    })
+    return JSON.parse(JSON.stringify(lobbies))
+  } catch (error) {
+    console.log(error)
+    return []
   }
 }

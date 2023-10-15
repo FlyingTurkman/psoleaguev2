@@ -26,6 +26,15 @@ io.on('connection', (socket) => {
     socket.on('queue-update', (queue) => {
         io.emit('queue-update', queue)
     })
+
+    socket.on('lobby-update', (lobby) => {
+        io.emit('lobby-update', lobby)
+    })
+
+    socket.on('lobbies-updates', (lobbies) => {
+        io.emit('lobbies-updates', lobbies)
+    })
+
     socket.on('disconnect', () => {
         console.log('Socket disconnected', socket.id)
     })

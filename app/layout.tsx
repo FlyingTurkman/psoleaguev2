@@ -100,13 +100,13 @@ export default async function RootLayout({
               awayTeam: changeEvent.fullDocument.awayTeam,
               homeTeam: changeEvent.fullDocument.homeTeam,
               lobbyResult: changeEvent.fullDocument.lobbyResult,
-              acceptDeadline: changeEvent.fullDocument.acceptDeadline
+              acceptDeadline: changeEvent.fullDocument.acceptDeadline,
+              turn: changeEvent.fullDocument.turn
             }
             const oldLobbies: lobbyType[] = lobbies.filter((l) => l._id.toString() != newLobby._id.toString())
             lobbies = oldLobbies.concat([newLobby])
             socket.emit(lobbyUpdate, newLobby)
             socket.emit(lobbiesUpdates, lobbies)
-
             //TODO: bu kısım eğer client lobby accept faze başarısız olursa aktif edilecek
             /* if (newLobby.lobbyResult = lobbyWaitingForAccept) {
               const dateTime = new Date().getTime()

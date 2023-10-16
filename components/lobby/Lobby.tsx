@@ -1,6 +1,9 @@
-import { lobbyType, userType } from "@/types";
+import { lobbyMessageType, lobbyType, userType } from "@/types";
 import LobbyView from "./LobbyView";
-import { Users } from "@/utils/mongodb/models";
+import { Lobbies, LobbyMessages, Users } from "@/utils/mongodb/models";
+import { ChangeStreamDocument } from "mongodb";
+import { io } from 'socket.io-client'
+import { lobbyMessages } from "@/utils/src/constants";
 
 
 
@@ -14,8 +17,10 @@ import { Users } from "@/utils/mongodb/models";
 
 
 export default async function Lobby({ initialLobby, token }: { initialLobby: lobbyType | null | undefined, token?: string }) {
+    const socket = io(`${process.env.socketPath}:${process.env.socketPort}`)
     const playerIds: string[] = []
     let players: userType[] = []
+    let messages: lobbyMessageType[] = []
     if (initialLobby?.players) {
         for (const player of initialLobby?.players) {
             if (!playerIds.includes(player.playerId)){
@@ -25,9 +30,13 @@ export default async function Lobby({ initialLobby, token }: { initialLobby: lob
         players = await getUsers(playerIds)
     }
 
+    messages = JSON.parse(JSON.stringify(await LobbyMessages.find({
+        lobbyId: initialLobby?._id.toString()
+    })))
+
     return(
         <div>
-            <LobbyView initialLobby={initialLobby} token={token} players={players}/>
+            <LobbyView initialLobby={initialLobby} initialMessages={messages} token={token} players={players}/>
         </div>
     )
 }

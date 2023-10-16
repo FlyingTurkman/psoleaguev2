@@ -70,7 +70,68 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
+
 }
+
+
+  * {
+    @apply outline-none focus:outline-none
+  }
+
+  h1 {
+    @apply text-xl font-bold
+  }
+
+  h2 {
+    @apply text-lg font-semibold
+  }
+
+  h3 {
+    @apply text-base font-semibold
+  }
+
+  .formLabel, .formError {
+    @apply text-gray-600 text-sm
+  }
+
+  .formInput {
+    @apply rounded p-2 border-gray-300 border
+  }
+
+  .formError {
+    @apply text-red-600
+  }
+
+  .buttonPrimary, .buttonRed {
+    @apply bg-blue-600 hover:bg-blue-800 text-white p-2 rounded disabled:bg-gray-600 disabled:hover:bg-gray-800 transition-all
+  }
+
+  .buttonRed {
+    @apply bg-red-600 hover:bg-red-800
+  }
+
+  .scrollBar {
+    @apply scrollbar-thin scrollbar-thumb-blue-800
+  }
+
+  .menuLink {
+    @apply flex flex-row font-semibold items-center gap-2 p-2 hover:bg-blue-800 transition-all rounded-full
+  }
+
+  .subMenuLink, .subMenuLinkActive {
+    @apply flex text-2xl flex-1 hover:bg-blue-800 items-center justify-center p-2 rounded transition-all
+  }
+
+  .subMenuLinkActive {
+    @apply bg-white text-blue-600
+  }
+
+  .link {
+    @apply hover:underline
+  }
+
+

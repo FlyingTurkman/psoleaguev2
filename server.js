@@ -35,6 +35,10 @@ io.on('connection', (socket) => {
         io.emit('lobbies-updates', lobbies)
     })
 
+    socket.on('lobby-messages', (message) => {
+        io.emit('lobby-messages', message)
+    })
+
     socket.on('disconnect', () => {
         console.log('Socket disconnected', socket.id)
     })

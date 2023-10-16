@@ -11,7 +11,7 @@ import { Lobbies, Queues, Teams, Users } from '@/utils/mongodb/models';
 import { ChangeStreamDocument, ObjectId } from 'mongodb';
 import LastNews from '@/components/LastNews';
 import { io } from 'socket.io-client'
-import { lobbiesUpdates, lobbyUpdate, queueUpdate } from '@/utils/src/constants';
+import { lobbiesUpdates, lobbyCanceled, lobbyUpdate, lobbyWaitingForAccept, lobbyWaitingForDraft, queueUpdate } from '@/utils/src/constants';
 import Lobby from '@/components/lobby/Lobby';
 
 
@@ -98,12 +98,45 @@ export default async function RootLayout({
               completed: changeEvent.fullDocument.completed,
               players: changeEvent.fullDocument.players,
               awayTeam: changeEvent.fullDocument.awayTeam,
-              homeTeam: changeEvent.fullDocument.homeTeam
+              homeTeam: changeEvent.fullDocument.homeTeam,
+              lobbyResult: changeEvent.fullDocument.lobbyResult,
+              acceptDeadline: changeEvent.fullDocument.acceptDeadline
             }
             const oldLobbies: lobbyType[] = lobbies.filter((l) => l._id.toString() != newLobby._id.toString())
             lobbies = oldLobbies.concat([newLobby])
             socket.emit(lobbyUpdate, newLobby)
             socket.emit(lobbiesUpdates, lobbies)
+
+            //TODO: bu kısım eğer client lobby accept faze başarısız olursa aktif edilecek
+            /* if (newLobby.lobbyResult = lobbyWaitingForAccept) {
+              const dateTime = new Date().getTime()
+              if (new Date(newLobby.acceptDeadline).getTime() < dateTime) {
+                Lobbies.updateOne({
+                  _id: newLobby._id.toString()
+                }, {
+                  $set: {
+                    completed: true,
+                    lobbyResult: lobbyCanceled
+                  }
+                })
+              }       
+            } else {
+              let allPlayersAccepted = true
+              for (const player of newLobby.players) {
+                if (!player.accepted) {
+                  allPlayersAccepted = false
+                }
+              }
+              if (allPlayersAccepted) {
+                Lobbies.updateOne({
+                  _id: newLobby._id.toString()
+                }, {
+                  $set: {
+                    lobbyResult: lobbyWaitingForDraft
+                  }
+                })
+              }
+            } */
           }
         })
       } catch (error) {

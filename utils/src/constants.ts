@@ -18,6 +18,7 @@ export const queuesUpdate = 'queues-updates'
 export const queueUpdate = 'queue-update'
 export const lobbyUpdate = 'lobby-update'
 export const lobbiesUpdates = 'lobbies-updates'
+export const lobbyMessages = 'lobby-messages'
 
 // lobby settings
 export const lobbyMaxPlayer = 16

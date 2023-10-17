@@ -72,13 +72,22 @@ export type lobbyType = {
     awayTeam?: string[],
     completed: boolean,
     lobbyResult: number,
-    acceptDeadline: Date
+    acceptDeadline: Date,
+    turn: string
 }
 
 
 type lobbyPlayerType = {
     playerId: string,
     accepted: boolean
+}
+
+export type lobbyMessageType = {
+    _id: ObjectId,
+    lobbyId: string,
+    playerId: string,
+    dateTime: Date,
+    content: string
 }
 
 

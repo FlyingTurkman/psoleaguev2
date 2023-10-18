@@ -1,6 +1,11 @@
 import { ObjectId } from "mongodb"
 import { Dispatch } from 'react'
 import { matchAwayWin, matchCanceled, matchDraw, matchHomeWin, matchNotPlayed, matchPlaying, matchResultWaiting } from "./utils/src/constants"
+import { Server as NetServer, Socket } from 'net'
+import { NextResponse } from "next/server"
+import { Server as SocketIOServer } from 'socket.io'
+import { NextApiResponse } from "next"
+
 
 
 export {}
@@ -145,6 +150,14 @@ export type myTeamPageContextType = {
     setTeam: Dispatch<teamType | null | undefined>
 }
 
+
+export type NextResponseServerIO = NextApiResponse & {
+    socket: Socket & {
+        server: NetServer & {
+            io: SocketIOServer
+        }
+    }
+}
 
 declare module "bson" {
     interface ObjectId {

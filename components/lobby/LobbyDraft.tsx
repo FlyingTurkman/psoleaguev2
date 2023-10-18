@@ -15,7 +15,7 @@ import { io } from "socket.io-client"
 import { lobbyMessages } from "@/utils/src/constants"
 import { VList } from "virtua"
 import { AiFillCrown } from "react-icons/ai"
-
+import { pickPlayer } from "./pickPlayer"
 
 
 
@@ -27,6 +27,7 @@ const socket = io(`${process.env.socketPath}:${process.env.socketPort}`)
 export default function LobbyDraft({ lobby, initialMessages , players, userId, token }: { lobby: lobbyType | null | undefined, initialMessages: lobbyMessageType[], players: userType[], userId?: string, token?: string }) {
     const formRef = useRef<HTMLFormElement>(null)
     const sendMessageWithUserId = sendMessage.bind(null, { userId, lobbyId: lobby?._id.toString()})
+    const pickPlayerWithPlayerId = pickPlayer.bind(null, { pickerId: userId, lobbyId: lobby?._id.toString() })
     const [messages, setMessages] = useState<lobbyMessageType[]>(initialMessages)
     useEffect(() => {
         socket.on(lobbyMessages, (newMessage: lobbyMessageType) => {
@@ -57,14 +58,14 @@ export default function LobbyDraft({ lobby, initialMessages , players, userId, t
             <hr/>
             <CardContent className="flex flex-col gap-1">
                 <CardDescription>Players waiting for pick</CardDescription>
-                <div className="flex flex-row flex-wrap gap-2">
+                <form className="flex flex-row flex-wrap gap-2" action={pickPlayerWithPlayerId}>
                     {lobby?.players.filter((p) => !lobby.homeTeam?.includes(p.playerId) && !lobby.awayTeam?.includes(p.playerId)).map((p) => {
                         const player = players.find((user) => user._id.toString() == p.playerId)
                         if (player) {
                             return(
                                 <HoverCard key={`playerPickButton${player._id.toString()}`}>
                                     <HoverCardTrigger>
-                                        <Button variant={'green'} className="flex flex-row h-full justify-between" disabled={lobby.turn != userId? true: false}>
+                                        <Button variant={'green'} name="playerId" value={player._id.toString()} className="flex flex-row h-full justify-between" disabled={lobby.turn != userId? true: false} type="submit">
                                             {player.username}
                                         </Button>
                                     </HoverCardTrigger>
@@ -93,7 +94,7 @@ export default function LobbyDraft({ lobby, initialMessages , players, userId, t
                             return null
                         }
                     })}
-                </div>
+                </form>
             </CardContent>
             <CardContent className="flex flex-row gap-2">
                 <div className="flex flex-col basis-1/2 gap-2 items-center border-gray-300 border rounded p-2">

@@ -32,3 +32,4 @@ export const lobbyCanceled = 2
 export const lobbyHomeWins = 3
 export const lobbyDraw = 4
 export const lobbyAwayWins = 5
+export const lobbyWaitingForResult = 6

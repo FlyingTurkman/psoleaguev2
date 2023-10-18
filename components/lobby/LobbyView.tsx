@@ -5,9 +5,10 @@ import { lobbyMessageType, lobbyType, siteContextType, userType } from '@/types'
 import { HiUserGroup } from 'react-icons/hi'
 import Button from '../Button'
 import { io } from 'socket.io-client'
-import { lobbiesUpdates, lobbyUpdate, lobbyWaitingForAccept, lobbyWaitingForDraft } from '@/utils/src/constants'
+import { lobbiesUpdates, lobbyUpdate, lobbyWaitingForAccept, lobbyWaitingForDraft, lobbyWaitingForResult } from '@/utils/src/constants'
 import LobbyJoin from './LobbyJoin'
 import LobbyDraft from './LobbyDraft'
+import LobbyInfo from './LobbyInfo'
 
 
 
@@ -60,6 +61,9 @@ export default function LobbyView({ initialLobby, initialMessages, token, player
                         )}
                         {lobby?.lobbyResult == lobbyWaitingForDraft && (
                             <LobbyDraft lobby={lobby} initialMessages={messages} players={players} userId={user?._id.toString()} token={token}/>
+                        )}
+                        {lobby?.lobbyResult == lobbyWaitingForResult && (
+                            <LobbyInfo lobby={lobby} players={players}/>
                         )}
                     </div>
                 </div>

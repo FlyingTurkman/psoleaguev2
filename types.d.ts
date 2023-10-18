@@ -67,6 +67,7 @@ export type matchType = {
 export type lobbyType = {
     _id: ObjectId,
     lobbyName: string,
+    lobbyPassword?: string,
     players: lobbyPlayerType[],
     homeTeam?: string[],
     awayTeam?: string[],

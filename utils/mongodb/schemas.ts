@@ -264,6 +264,10 @@ export const lobbySchema = new Schema<lobbyType>({
         type: String,
         required: true
     },
+    lobbyPassword: {
+        type: String,
+        rqeuired: false
+    },
     players: [
         {
             playerId: {

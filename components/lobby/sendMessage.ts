@@ -24,10 +24,6 @@ export async function sendMessage( { userId, lobbyId }: {userId?: string, lobbyI
         if (socket.readyState != WebSocket.OPEN) {
             console.log('socket on')
 
-            socket.addEventListener('open', () => {
-                
-            })
-
             socket.send(JSON.stringify({
                 action: sendLobbyMessage,
                 message: 'test message'

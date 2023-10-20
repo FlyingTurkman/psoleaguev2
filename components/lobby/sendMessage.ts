@@ -1,13 +1,10 @@
 'use server'
 import { ObjectId } from 'mongodb'
-import { lobbyMessageType, lobbyType } from "@/types"
-import { Lobbies, LobbyMessages } from "@/utils/mongodb/models"
-import { revalidatePath } from 'next/cache'
-import { io } from 'socket.io-client'
-import { lobbyMessages } from '@/utils/src/constants'
+import { LobbyMessages } from "@/utils/mongodb/models"
+import {  sendLobbyMessage } from '@/utils/src/constants'
 
 
-const socket = io(`${process.env.socketPath}:${process.env.socketPort}`)
+
 
 export async function sendMessage( { userId, lobbyId }: {userId?: string, lobbyId?: string }, formData: FormData) {
     try {
@@ -21,7 +18,25 @@ export async function sendMessage( { userId, lobbyId }: {userId?: string, lobbyI
             content
         }
         await LobbyMessages.create(newMessage)
-        socket.emit(lobbyMessages, newMessage)
+
+        const socket = new WebSocket(process.env.socketPath)
+
+        if (socket.readyState != WebSocket.OPEN) {
+            console.log('socket on')
+
+            socket.addEventListener('open', () => {
+                
+            })
+
+            socket.send(JSON.stringify({
+                action: sendLobbyMessage,
+                message: 'test message'
+            }))
+
+        } else {
+            console.log('socket off')
+        }
+
     } catch (error) {
         console.log(error)
         return false

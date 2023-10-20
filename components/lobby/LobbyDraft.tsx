@@ -11,7 +11,6 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from "../ui/hover-card"
 import { sendMessage } from "./sendMessage"
 import { Input } from "../ui/input"
 import { useEffect, useState, useRef } from "react"
-import { io } from "socket.io-client"
 import { lobbyMessages } from "@/utils/src/constants"
 import { VList } from "virtua"
 import { AiFillCrown } from "react-icons/ai"
@@ -20,7 +19,8 @@ import { pickPlayer } from "./pickPlayer"
 
 
 
-const socket = io(`${process.env.socketPath}:${process.env.socketPort}`)
+
+const socket = new WebSocket(process.env.socketPath)
 
 
 
@@ -29,18 +29,27 @@ export default function LobbyDraft({ lobby, initialMessages , players, userId, t
     const sendMessageWithUserId = sendMessage.bind(null, { userId, lobbyId: lobby?._id.toString()})
     const pickPlayerWithPlayerId = pickPlayer.bind(null, { pickerId: userId, lobbyId: lobby?._id.toString() })
     const [messages, setMessages] = useState<lobbyMessageType[]>(initialMessages)
+    console.log(sendMessageWithUserId)
     useEffect(() => {
-        socket.on(lobbyMessages, (newMessage: lobbyMessageType) => {
-            if (newMessage.lobbyId == lobby?._id.toString()) {
-                const messageCheck: lobbyMessageType | undefined = messages.find((m) => m._id.toString() == newMessage._id.toString())
-                if (!messageCheck) {
-                    setMessages((oldMessages) => [...oldMessages, newMessage])
+
+        if (socket.readyState != WebSocket.OPEN) {
+
+            socket.addEventListener('message', (event) => {
+                if (event.data) {
+                    if (event.data.message) {
+                        const newMessage = event.data.message
+                        const messageCheck: lobbyMessageType | undefined = messages.find((m) => m._id.toString() == newMessage._id.toString())
+                        if (!messageCheck) {
+                            setMessages((oldMessages) => [...oldMessages, newMessage])
+                        }
+                    }
                 }
-            }
-        })
+            })
+        }
+
 
         return () => {
-            socket.off(lobbyMessages)
+            socket.close()
         }
     }, [])
     useEffect(() => {

@@ -20,7 +20,10 @@ import { pickPlayer } from "./pickPlayer"
 
 
 
+
 const socket = new WebSocket(process.env.socketPath)
+
+
 
 
 
@@ -29,11 +32,9 @@ export default function LobbyDraft({ lobby, initialMessages , players, userId, t
     const sendMessageWithUserId = sendMessage.bind(null, { userId, lobbyId: lobby?._id.toString()})
     const pickPlayerWithPlayerId = pickPlayer.bind(null, { pickerId: userId, lobbyId: lobby?._id.toString() })
     const [messages, setMessages] = useState<lobbyMessageType[]>(initialMessages)
-    console.log(sendMessageWithUserId)
     useEffect(() => {
 
         if (socket.readyState != WebSocket.OPEN) {
-
             socket.addEventListener('message', (event) => {
                 if (event.data) {
                     if (event.data.message) {
@@ -51,6 +52,7 @@ export default function LobbyDraft({ lobby, initialMessages , players, userId, t
         return () => {
             socket.close()
         }
+
     }, [])
     useEffect(() => {
         const element = document.getElementById('messagesArea')

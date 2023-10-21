@@ -4,7 +4,6 @@ import { SiteContext } from '@/context/SiteContext'
 import { lobbyMessageType, lobbyType, siteContextType, userType } from '@/types'
 import { HiUserGroup } from 'react-icons/hi'
 import Button from '../Button'
-import { io } from 'socket.io-client'
 import { lobbiesUpdates, lobbyUpdate, lobbyWaitingForAccept, lobbyWaitingForDraft, lobbyWaitingForResult } from '@/utils/src/constants'
 import LobbyJoin from './LobbyJoin'
 import LobbyDraft from './LobbyDraft'
@@ -12,9 +11,7 @@ import LobbyInfo from './LobbyInfo'
 
 
 
-
-const socket = io(`${process.env.socketPath}:${process.env.socketPort}`)
-
+const socket = new WebSocket(process.env.socketPath)
 
 
 export default function LobbyView({ initialLobby, initialMessages, token, players }: { initialLobby: lobbyType | null | undefined, initialMessages: lobbyMessageType[], token?: string, players: userType[] }) {
@@ -23,32 +20,47 @@ export default function LobbyView({ initialLobby, initialMessages, token, player
     const [lobby, setLobby] = useState<lobbyType | null | undefined>(initialLobby)
     const [messages, setMessages] = useState<lobbyMessageType[]>(initialMessages || [])
     useEffect(() => {
-        socket.on(lobbyUpdate, (currentLobby: lobbyType | null | undefined) => {
-            if (!lobby || !currentLobby) setLobby(null)
-            if (!currentLobby?.players) return
-            for (const player of  currentLobby.players) {
-                if (player.playerId == user?._id.toString()) {
-                    setLobby(currentLobby)
-                }
-            }
-        })
-
-        socket.on(lobbiesUpdates, (currentLobbies: lobbyType[]) => {
-            let isUserInALobby = false
-            for (const l of currentLobbies) {
-                for (const player of l.players) {
-                    if (player.playerId == user?._id.toString()) {
-                        isUserInALobby = true
+        console.log('use effect works 1')
+        if (socket.readyState != WebSocket.OPEN) {
+            console.log('socket works')
+            socket.addEventListener('open', () => {
+                console.log('open works')
+                socket.send(JSON.stringify({
+                    action: 'userJoined',
+                    userId: user?._id.toString()
+                }))
+            })
+            socket.addEventListener('message', (event) => {
+                console.log('message works')
+                if (event.data) {
+                    const data = JSON.parse(event.data)
+                    if (data.lobby) {
+                        console.log('data', data.lobby)
+                        if (data.lobby._id.toString() == initialLobby?._id.toString()) {
+                            const newLobby: lobbyType = {
+                                _id: data.lobby._id.toString(),
+                                lobbyName: data.lobby.lobbyName,
+                                players: data.lobby.players,
+                                acceptDeadline: data.acceptDeadline,
+                                completed: data.completed,
+                                lobbyResult: data.lobbyResult,
+                                turn: data.turn,
+                                awayTeam: data.awayTeam,
+                                homeTeam: data.homeTeam,
+                                lobbyPassword: data.lobbyPassword
+                            }
+                            console.log('newlobby', data.lobby)
+                            setLobby(data.lobby)
+                        }
                     }
+                } else {
+                    console.log('event data not working')
                 }
-            }
-            if (!isUserInALobby) {
-                setLobby(null)
-            }
-        })
-
+            })
+        }
+        console.log('use effect works 2')
         return () => {
-            socket.off(lobbyUpdate)
+            socket.close()
         }
     }, [])
     return(

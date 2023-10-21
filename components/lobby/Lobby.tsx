@@ -17,7 +17,6 @@ import { lobbyMessages } from "@/utils/src/constants";
 
 
 export default async function Lobby({ initialLobby, token }: { initialLobby: lobbyType | null | undefined, token?: string }) {
-    const socket = io(`${process.env.socketPath}:${process.env.socketPort}`)
     const playerIds: string[] = []
     let players: userType[] = []
     let messages: lobbyMessageType[] = []

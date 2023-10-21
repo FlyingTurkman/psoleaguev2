@@ -7,12 +7,12 @@ import { clearInterval, setInterval } from 'worker-timers';
 import { io } from 'socket.io-client'
 import { queueUpdate, queuesUpdate } from "@/utils/src/constants"
 
-const socket = io(`${process.env.socketPath}:${process.env.socketPort}`)
+//const socket = io(`${process.env.socketPath}:${process.env.socketPort}`)
 
 
 export default function SiteContextProvider({ children, user, team, initialQueue, token }: { children: React.ReactNode, user: userType | null | undefined, team: teamType | null | undefined, initialQueue: queueType | null | undefined, token?: string }) {
     const [queue, setQueue] = useState<queueType | null | undefined>(initialQueue)
-    useEffect(() => {
+    /* useEffect(() => {
         socket.on(queueUpdate, (currentQueue: queueType | null | undefined) => {
             console.log(currentQueue)
             if (currentQueue?.players?.includes(user?._id.toString()?? 'sharkman')) {
@@ -35,7 +35,7 @@ export default function SiteContextProvider({ children, user, team, initialQueue
             socket.off(queueUpdate)
             socket.off(queuesUpdate)
         }
-    }, [])
+    }, []) */
     useEffect(() => {
         const queueInterval = setInterval(() => {
             if (queue) {

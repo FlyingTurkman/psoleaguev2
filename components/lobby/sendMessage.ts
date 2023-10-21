@@ -19,19 +19,20 @@ export async function sendMessage( { userId, lobbyId }: {userId?: string, lobbyI
         }
         await LobbyMessages.create(newMessage)
 
-        const socket = new WebSocket(process.env.socketPath)
+        /* const socket = new WebSocket(process.env.socketPath)
 
         if (socket.readyState != WebSocket.OPEN) {
             console.log('socket on')
 
             socket.send(JSON.stringify({
                 action: sendLobbyMessage,
-                message: 'test message'
+                message: 'test message',
             }))
+            
 
         } else {
             console.log('socket off')
-        }
+        } */
 
     } catch (error) {
         console.log(error)

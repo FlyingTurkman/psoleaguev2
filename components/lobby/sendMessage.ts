@@ -2,7 +2,7 @@
 import { ObjectId } from 'mongodb'
 import { LobbyMessages } from "@/utils/mongodb/models"
 import {  sendLobbyMessage } from '@/utils/src/constants'
-
+import { socket } from '../../utils/src/webSocket'
 
 
 
@@ -17,19 +17,24 @@ export async function sendMessage( { userId, lobbyId }: {userId?: string, lobbyI
             dateTime: new Date(),
             content
         }
+        
         await LobbyMessages.create(newMessage)
 
-        /* const socket = new WebSocket(process.env.socketPath)
+        
 
-        if (socket.readyState != WebSocket.OPEN) {
+        /* if (socket.readyState != WebSocket.OPEN) {
             console.log('socket on')
-
+            socket.addEventListener('open', () => {
+                socket.send(JSON.stringify({
+                    action: 'userJoined',
+                    userId: userId,
+                }))
+            })
+            console.log('ready state', socket.readyState)
             socket.send(JSON.stringify({
                 action: sendLobbyMessage,
-                message: 'test message',
-            }))
-            
-
+                message: JSON.parse(JSON.stringify(newMessage))
+            }))   
         } else {
             console.log('socket off')
         } */

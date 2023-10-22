@@ -13,7 +13,7 @@ import LastNews from '@/components/LastNews';
 import { lobbiesUpdates, lobbyCanceled, lobbyUpdate, lobbyWaitingForAccept, lobbyWaitingForDraft, queueUpdate } from '@/utils/src/constants';
 import Lobby from '@/components/lobby/Lobby';
 import { io } from 'socket.io-client';
-
+import { socket } from '@/utils/src/webSocket';
 
 
 
@@ -46,7 +46,7 @@ export default async function RootLayout({
       lobby = await getLobby(user._id.toString())
       lobbies = await getLobbies()
       // yeni socket ayarları
-      const socket: WebSocket = new WebSocket(process.env.socketPath)
+      
       if (socket.readyState != WebSocket.OPEN) {
 
         socket.addEventListener('open', () => {

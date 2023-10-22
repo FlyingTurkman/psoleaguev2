@@ -27,7 +27,7 @@
     "md5": "^2.3.0",
     "mongodb": "^6.1.0",
     "mongoose": "^7.5.3",
-    "next": "latest",
+    "next": "^13.5.6",
     "node-cron": "^3.0.2",
     "react": "latest",
     "react-country-flag": "^3.1.0",

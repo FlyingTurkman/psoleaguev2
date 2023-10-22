@@ -11,13 +11,12 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from "../ui/hover-card"
 import { sendMessage } from "./sendMessage"
 import { Input } from "../ui/input"
 import { useEffect, useState, useRef } from "react"
-import { lobbyMessages } from "@/utils/src/constants"
+import { lobbyMessages, sendLobbyMessage } from "@/utils/src/constants"
 import { VList } from "virtua"
 import { AiFillCrown } from "react-icons/ai"
 import { pickPlayer } from "./pickPlayer"
-
-
-
+import { useFormik } from "formik"
+import { v4 as uudiv4 } from 'uuid'
 
 
 
@@ -29,37 +28,67 @@ const socket = new WebSocket(process.env.socketPath)
 
 export default function LobbyDraft({ lobby, initialMessages , players, userId, token }: { lobby: lobbyType | null | undefined, initialMessages: lobbyMessageType[], players: userType[], userId?: string, token?: string }) {
     const formRef = useRef<HTMLFormElement>(null)
+    const messageInputRef = useRef<HTMLInputElement>(null)
     const sendMessageWithUserId = sendMessage.bind(null, { userId, lobbyId: lobby?._id.toString()})
     const pickPlayerWithPlayerId = pickPlayer.bind(null, { pickerId: userId, lobbyId: lobby?._id.toString() })
     const [messages, setMessages] = useState<lobbyMessageType[]>(initialMessages)
-    useEffect(() => {
 
+    useEffect(() => {
         if (socket.readyState != WebSocket.OPEN) {
+            socket.addEventListener('open', () => {
+                socket.send(JSON.stringify({
+                    action: 'userJoined',
+                    userId: userId
+                }))
+            })
             socket.addEventListener('message', (event) => {
-                if (event.data) {
-                    if (event.data.message) {
-                        const newMessage = event.data.message
-                        const messageCheck: lobbyMessageType | undefined = messages.find((m) => m._id.toString() == newMessage._id.toString())
+                const data = JSON.parse(event.data)
+                if (data) {
+                    if (data.lobbyMessage) {
+                        const { dateTime, ...others} = JSON.parse(JSON.stringify(data.lobbyMessage))
+                        const messageCheck: lobbyMessageType | undefined = messages.find((m) => m._id.toString() == others._id.toString())
                         if (!messageCheck) {
-                            setMessages((oldMessages) => [...oldMessages, newMessage])
+                            setMessages((oldMessages) => [...oldMessages, {...others, dateTime: new Date(dateTime)}])
                         }
                     }
                 }
             })
         }
-
-
         return () => {
+            socket.removeEventListener('open', () => {})
+            socket.removeEventListener('message', () => {})
             socket.close()
         }
 
     }, [])
+
+    useEffect(() => {
+        console.log(messages)
+    }, [messages])
+
     useEffect(() => {
         const element = document.getElementById('messagesArea')
         if (element) {
             element.scrollTop = element?.scrollHeight
         }
     }, [messages])
+
+
+    function messageSended() {
+        console.log('message sended')
+        if (messageInputRef && messageInputRef.current) {
+            socket.send(JSON.stringify({
+                action: sendLobbyMessage,
+                message: {
+                    _id: uudiv4(),
+                    lobbyId: lobby?._id.toString(),
+                    playerId: userId,
+                    dateTime: new Date(),
+                    content: messageInputRef.current.value
+                }
+            }))
+        }
+    }
     return(
         <Card className="flex flex-col container gap-2 max-h-screen scrollBar overflow-auto">
             <CardHeader className="items-center justify-center">
@@ -187,7 +216,7 @@ export default function LobbyDraft({ lobby, initialMessages , players, userId, t
             </CardContent>
             <hr/>
             <CardContent>
-                <form ref={formRef} className="flex flex-col gap-2" action={sendMessageWithUserId} autoComplete="off">
+                <form ref={formRef} className="flex flex-col gap-2" action={sendMessageWithUserId} onSubmitCapture={() => messageSended()} autoComplete="off">
                     <CardDescription>Lobby Chat</CardDescription>
                     <VList id="messagesArea" className="flex flex-col gap-2 p-2 h-60 max-h-60 overflow-auto scrollBar border border-gray-300 rounded" style={{height: '240px'}}>
                         {messages.sort((a, b) => new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime()).map((message) => {
@@ -205,7 +234,7 @@ export default function LobbyDraft({ lobby, initialMessages , players, userId, t
                     </VList>
                     <hr/>
                     <div className="flex flex-row gap-2">
-                        <Input type="text" placeholder="Message" id="message" name="message" required/>
+                        <Input type="text" ref={messageInputRef} placeholder="Message" id="message" name="message" required/>
                         <Button type="submit" size={'icon'}>
                             <IoSend/>
                         </Button>

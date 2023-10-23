@@ -79,7 +79,9 @@ export type lobbyType = {
     completed: boolean,
     lobbyResult: number,
     acceptDeadline: Date,
-    turn: string
+    turn: string,
+    homeCaptainResult?: number,
+    awayCaptainResult?: number
 }
 
 

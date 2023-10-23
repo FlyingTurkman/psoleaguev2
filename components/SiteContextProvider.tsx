@@ -24,7 +24,6 @@ export default function SiteContextProvider({ children, user, team, initialQueue
             socket.addEventListener('message', (event) => {
                 if (event.data) {
                     const data = JSON.parse(event.data)
-                    console.log('data', data)
                     setSocketMessage(data)
                 }
             })

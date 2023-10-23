@@ -297,6 +297,14 @@ export const lobbySchema = new Schema<lobbyType>({
     turn: {
         type: String,
         required: true
+    },
+    homeCaptainResult: {
+        type: Number,
+        required: false
+    },
+    awayCaptainResult: {
+        type: Number,
+        required: false
     }
 })
 

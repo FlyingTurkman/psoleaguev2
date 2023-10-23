@@ -41,7 +41,7 @@ export default function LobbyView({ initialLobby, initialMessages, token, player
                             <LobbyDraft lobby={lobby} initialMessages={messages} players={players} userId={user?._id.toString()} token={token}/>
                         )}
                         {lobby?.lobbyResult == lobbyWaitingForResult && (
-                            <LobbyInfo lobby={lobby} players={players}/>
+                            <LobbyInfo lobby={lobby} players={players} token={token || ''}/>
                         )}
                     </div>
                 </div>

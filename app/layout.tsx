@@ -116,7 +116,7 @@ export default async function RootLayout({
               lobbyResult: changeEvent.fullDocument.lobbyResult,
               acceptDeadline: changeEvent.fullDocument.acceptDeadline,
               turn: changeEvent.fullDocument.turn,
-              lobbyPassword: changeEvent.fullDocument.lobbyPasword
+              lobbyPassword: changeEvent.fullDocument.lobbyPassword
             }
             const oldLobbies: lobbyType[] = lobbies.filter((l) => l._id.toString() != newLobby._id.toString())
             lobbies = oldLobbies.concat([newLobby])

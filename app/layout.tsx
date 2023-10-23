@@ -120,9 +120,8 @@ export default async function RootLayout({
             }
             const oldLobbies: lobbyType[] = lobbies.filter((l) => l._id.toString() != newLobby._id.toString())
             lobbies = oldLobbies.concat([newLobby])
-            //socket.emit(lobbyUpdate, newLobby)
             socket.send(JSON.stringify({
-              action: 'lobbyUpdate',
+              action: lobbyUpdate,
               lobby: JSON.parse(JSON.stringify(newLobby))
             }))
             //socket.emit(lobbiesUpdates, lobbies)

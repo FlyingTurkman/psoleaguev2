@@ -129,7 +129,8 @@ type queuePlayerType = {
 export type siteContextType = {
     user?: userType | null | undefined,
     team?: teamType | null | undefined,
-    queue?: queueType |null | undefined
+    queue?: queueType |null | undefined,
+    socketMessage?: any
 }
 
 

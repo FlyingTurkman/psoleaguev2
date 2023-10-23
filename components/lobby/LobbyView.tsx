@@ -8,39 +8,28 @@ import { lobbiesUpdates, lobbyUpdate, lobbyWaitingForAccept, lobbyWaitingForDraf
 import LobbyJoin from './LobbyJoin'
 import LobbyDraft from './LobbyDraft'
 import LobbyInfo from './LobbyInfo'
-import { socket } from '../../utils/src/webSocket'
+
 
 
 
 
 export default function LobbyView({ initialLobby, initialMessages, token, players }: { initialLobby: lobbyType | null | undefined, initialMessages: lobbyMessageType[], token?: string, players: userType[] }) {
-    const { user }: siteContextType = useContext(SiteContext)
+    const { user, socketMessage }: siteContextType = useContext(SiteContext)
     const [isOpen, setIsOpen] = useState<boolean>(true)
     const [lobby, setLobby] = useState<lobbyType | null | undefined>(initialLobby)
     const [messages, setMessages] = useState<lobbyMessageType[]>(initialMessages || [])
+
     useEffect(() => {
-        if (socket.readyState != WebSocket.OPEN) {
-            socket.addEventListener('open', () => {
-                socket.send(JSON.stringify({
-                    action: 'userJoined',
-                    userId: user?._id.toString()
-                }))
-            })
-            socket.addEventListener('message', (event) => {
-                if (event.data) {
-                    const data = JSON.parse(event.data)
-                    if (data.lobby) {
-                        if (data.lobby._id.toString() == initialLobby?._id.toString()) {
-                            setLobby(data.lobby)
-                        }
-                    }
-                }
-            })
+        const data = JSON.parse(JSON.stringify(socketMessage))
+        console.log('lobby', data)
+        if (data?.lobby) {
+            if (data.lobby._id.toString() == initialLobby?._id.toString()) {
+                const { acceptDeadline, ...others } = data.lobby
+                setLobby({acceptDeadline: new Date(acceptDeadline), ...others})
+            }
+            
         }
-        return () => {
-            socket.close()
-        }
-    }, [])
+    }, [socketMessage])
     return(
         <div className={`${lobby && !lobby.completed? 'block' : 'hidden'}`}>
             {isOpen? (

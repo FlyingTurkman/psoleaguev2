@@ -7,35 +7,34 @@ import { clearInterval, setInterval } from 'worker-timers';
 import { io } from 'socket.io-client'
 import { queueUpdate, queuesUpdate } from "@/utils/src/constants"
 
-//const socket = io(`${process.env.socketPath}:${process.env.socketPort}`)
+import { socket } from "@/utils/src/webSocket"
 
 
 export default function SiteContextProvider({ children, user, team, initialQueue, token }: { children: React.ReactNode, user: userType | null | undefined, team: teamType | null | undefined, initialQueue: queueType | null | undefined, token?: string }) {
     const [queue, setQueue] = useState<queueType | null | undefined>(initialQueue)
-    /* useEffect(() => {
-        socket.on(queueUpdate, (currentQueue: queueType | null | undefined) => {
-            console.log(currentQueue)
-            if (currentQueue?.players?.includes(user?._id.toString()?? 'sharkman')) {
-                setQueue(currentQueue)
-            }
-        })
-
-        socket.on(queuesUpdate, (queues: queueType[]) => {
-            let inQueue = false
-            for (const tempQueue of queues) {
-                if (tempQueue.players?.includes(user?._id.toString()?? 'sharkman')) {
-                    inQueue = true
+    const [socketMessage, setSocketMessage] = useState<any>(null)
+    useEffect(() => {
+        if (socket.readyState != WebSocket.OPEN) {
+            socket.addEventListener('open', () => {
+                socket.send(JSON.stringify({
+                    action: 'userJoined',
+                    userId: user?._id.toString()
+                }))
+            })
+            socket.addEventListener('message', (event) => {
+                if (event.data) {
+                    const data = JSON.parse(event.data)
+                    console.log('data', data)
+                    setSocketMessage(data)
                 }
-            }
-            if (!inQueue){
-                setQueue(null)
-            }
-        })
-        return () => {
-            socket.off(queueUpdate)
-            socket.off(queuesUpdate)
+            })
         }
-    }, []) */
+        return () => {
+            socket.removeEventListener('open', () => {})
+            socket.removeEventListener('message', () => {})
+            socket.close()
+        }
+    }, [])
     useEffect(() => {
         const queueInterval = setInterval(() => {
             if (queue) {
@@ -63,7 +62,8 @@ export default function SiteContextProvider({ children, user, team, initialQueue
     const siteData: siteContextType = {
         user,
         team,
-        queue
+        queue,
+        socketMessage
     }
     return(
         <SiteContext.Provider value={siteData}>

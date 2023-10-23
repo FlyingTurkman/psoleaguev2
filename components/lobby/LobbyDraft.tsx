@@ -1,5 +1,5 @@
 'use client'
-import { lobbyMessageType, lobbyType, userType } from "@/types"
+import { lobbyMessageType, lobbyType, siteContextType, userType } from "@/types"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card"
 import { Button } from "../ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
@@ -10,14 +10,14 @@ import { positionLists } from "@/utils/src/positionLists"
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "../ui/hover-card"
 import { sendMessage } from "./sendMessage"
 import { Input } from "../ui/input"
-import { useEffect, useState, useRef } from "react"
+import { useEffect, useState, useRef, useContext } from "react"
 import { lobbyMessages, sendLobbyMessage } from "@/utils/src/constants"
 import { VList } from "virtua"
 import { AiFillCrown } from "react-icons/ai"
 import { pickPlayer } from "./pickPlayer"
 import { useFormik } from "formik"
 import { v4 as uudiv4 } from 'uuid'
-
+import { SiteContext } from "@/context/SiteContext"
 
 
 const socket = new WebSocket(process.env.socketPath)
@@ -27,44 +27,24 @@ const socket = new WebSocket(process.env.socketPath)
 
 
 export default function LobbyDraft({ lobby, initialMessages , players, userId, token }: { lobby: lobbyType | null | undefined, initialMessages: lobbyMessageType[], players: userType[], userId?: string, token?: string }) {
+    const { socketMessage }: siteContextType = useContext(SiteContext)
     const formRef = useRef<HTMLFormElement>(null)
     const messageInputRef = useRef<HTMLInputElement>(null)
     const sendMessageWithUserId = sendMessage.bind(null, { userId, lobbyId: lobby?._id.toString()})
     const pickPlayerWithPlayerId = pickPlayer.bind(null, { pickerId: userId, lobbyId: lobby?._id.toString() })
     const [messages, setMessages] = useState<lobbyMessageType[]>(initialMessages)
-
     useEffect(() => {
-        if (socket.readyState != WebSocket.OPEN) {
-            socket.addEventListener('open', () => {
-                socket.send(JSON.stringify({
-                    action: 'userJoined',
-                    userId: userId
-                }))
-            })
-            socket.addEventListener('message', (event) => {
-                const data = JSON.parse(event.data)
-                if (data) {
-                    if (data.lobbyMessage) {
-                        const { dateTime, ...others} = JSON.parse(JSON.stringify(data.lobbyMessage))
-                        const messageCheck: lobbyMessageType | undefined = messages.find((m) => m._id.toString() == others._id.toString())
-                        if (!messageCheck) {
-                            setMessages((oldMessages) => [...oldMessages, {...others, dateTime: new Date(dateTime)}])
-                        }
-                    }
+        const data = JSON.parse(JSON.stringify(socketMessage))
+        if (data) {
+            if (data?.lobbyMessage) {
+                const { dateTime, ...others} = JSON.parse(JSON.stringify(data.lobbyMessage))
+                const messageCheck: lobbyMessageType | undefined = messages.find((m) => m._id.toString() == others._id.toString())
+                if (!messageCheck) {
+                    setMessages((oldMessages) => [...oldMessages, {...others, dateTime: new Date(dateTime)}])
                 }
-            })
+            }
         }
-        return () => {
-            socket.removeEventListener('open', () => {})
-            socket.removeEventListener('message', () => {})
-            socket.close()
-        }
-
-    }, [])
-
-    useEffect(() => {
-        console.log(messages)
-    }, [messages])
+    }, [socketMessage])
 
     useEffect(() => {
         const element = document.getElementById('messagesArea')
@@ -75,7 +55,6 @@ export default function LobbyDraft({ lobby, initialMessages , players, userId, t
 
 
     function messageSended() {
-        console.log('message sended')
         if (messageInputRef && messageInputRef.current) {
             socket.send(JSON.stringify({
                 action: sendLobbyMessage,

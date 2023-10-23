@@ -21,7 +21,6 @@ export default function LobbyView({ initialLobby, initialMessages, token, player
 
     useEffect(() => {
         const data = JSON.parse(JSON.stringify(socketMessage))
-        console.log('lobby', data)
         if (data?.lobby) {
             if (data.lobby._id.toString() == initialLobby?._id.toString()) {
                 const { acceptDeadline, ...others } = data.lobby

@@ -73,7 +73,6 @@ export default function SiteContextProvider({ children, user, team, initialQueue
 
     async function updateLastOnline() {
         try {
-            console.log('update last online', new Date().toLocaleString('tr-TR'))
             await fetch(`${process.env.appPath}/api/userApi/lastOnlineUpdateApi`, {
                 method: 'POST',
                 body: JSON.stringify({
@@ -89,7 +88,6 @@ export default function SiteContextProvider({ children, user, team, initialQueue
 
     async function updateQueuePlayers() {
         try {
-            console.log('update players', new Date().toLocaleString('tr-TR'))
             await fetch(`${process.env.appPath}/api/queueApi/updateQueuePlayersApi`, {
                 method: 'POST',
                 body: JSON.stringify({
